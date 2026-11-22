@@ -218,14 +218,27 @@
       border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .womo-relay-tile:active { transform: scale(0.97); }
-    .womo-relay-tile.active {
-      background: var(--accent-magenta); border-color: var(--accent-magenta);
+    .womo-relay-tile.active,
+    body.light-mode .womo-relay-tile.active {
+      background: var(--accent-magenta) !important;
+      border-color: var(--accent-magenta) !important;
       box-shadow: 0 4px 18px var(--accent-magenta-glow);
+      color: #FFFFFF !important;
+    }
+    .womo-relay-tile.active *,
+    body.light-mode .womo-relay-tile.active * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
     }
     .relay-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .relay-title { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
     .relay-status { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .womo-relay-tile.active .relay-status { color: rgba(255,255,255,0.92); }
+    .womo-relay-tile.active .relay-title,
+    body.light-mode .womo-relay-tile.active .relay-title { color: #FFFFFF !important; }
+    .womo-relay-tile.active .relay-status,
+    body.light-mode .womo-relay-tile.active .relay-status { color: rgba(255,255,255,0.95) !important; }
+    .womo-relay-tile.active svg,
+    body.light-mode .womo-relay-tile.active svg { stroke: #FFFFFF !important; color: #FFFFFF !important; }
 
     /* Dimmer Kaydırıcılar (WomoNet Inline Sliders) */
     .dimmer-list { display: flex; flex-direction: column; gap: 12px; }
@@ -252,17 +265,37 @@
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s;
     }
     .womo-btn-action:active { transform: scale(0.98); }
-    .womo-btn-action.active-magenta {
+    .womo-btn-action.active-magenta,
+    .womo-btn-action[style*="accent-magenta"],
+    button[style*="accent-magenta"],
+    body.light-mode .womo-btn-action.active-magenta,
+    body.light-mode .womo-btn-action[style*="accent-magenta"],
+    body.light-mode button[style*="accent-magenta"] {
       background: var(--accent-magenta) !important;
       border-color: var(--accent-magenta) !important;
       box-shadow: 0 4px 18px var(--accent-magenta-glow);
       color: #FFFFFF !important;
     }
-    .womo-btn-action.active-blue {
+    .womo-btn-action.active-magenta *,
+    .womo-btn-action[style*="accent-magenta"] *,
+    button[style*="accent-magenta"] *,
+    body.light-mode .womo-btn-action.active-magenta *,
+    body.light-mode .womo-btn-action[style*="accent-magenta"] *,
+    body.light-mode button[style*="accent-magenta"] * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
+    }
+    .womo-btn-action.active-blue,
+    body.light-mode .womo-btn-action.active-blue {
       background: var(--accent-blue) !important;
       border-color: var(--accent-blue) !important;
       box-shadow: 0 4px 18px var(--accent-blue-glow);
       color: #FFFFFF !important;
+    }
+    .womo-btn-action.active-blue *,
+    body.light-mode .womo-btn-action.active-blue * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
     }
 
     /* Modal Stilleri */
@@ -549,7 +582,7 @@
           <div class="param-label" style="margin-top:3px;" id="alarmSubText">Sistem devrede değil</div>
         </div>
         <div style="display:flex; gap:8px;">
-          <button type="button" onclick="kurAlarm()" id="btnAlarmKur" style="background:var(--accent-magenta); color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="arm_alarm">Alarmı Kur</button>
+          <button type="button" onclick="kurAlarm()" id="btnAlarmKur" class="womo-btn-action active-magenta" style="padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="arm_alarm">Alarmı Kur</button>
           <button type="button" onclick="kapatAlarmModalAc()" id="btnAlarmKapat" style="display:none; background:#ef4444; color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="disarm_alarm">Alarmı Kapat</button>
         </div>
       </div>
@@ -579,7 +612,7 @@
           <span data-i18n="ble_conn">Bluetooth Bağlantısı & Güvenlik</span>
         </div>
       </div>
-      <button type="button" class="womo-btn-action" onclick="openBleModal()" style="background:var(--accent-magenta); margin-bottom:12px;">
+      <button type="button" class="womo-btn-action active-magenta" onclick="openBleModal()" style="margin-bottom:12px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
         <span data-i18n="ble_modal_title">Bluetooth Bağlantı Merkezi</span>
       </button>
@@ -789,7 +822,7 @@
 
     <!-- Dinamik Butonlar -->
     <div id="bleModalActions">
-      <button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action" style="background:var(--accent-magenta);">
+      <button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action active-magenta">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
         <span data-i18n="ble_connect_btn">Karavana Bağlan</span>
       </button>
@@ -818,7 +851,7 @@
     </div>
 
     <div style="display:flex; flex-direction:column; gap:8px;">
-      <button type="button" onclick="submitBlePinChange()" class="womo-btn-action" style="background:var(--accent-magenta);" data-i18n="ble_btn_save_pin">Şifreyi Güncelle</button>
+      <button type="button" onclick="submitBlePinChange()" class="womo-btn-action active-magenta" data-i18n="ble_btn_save_pin">Şifreyi Güncelle</button>
       <button type="button" onclick="document.getElementById('ble-pin-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track);" data-i18n="ble_btn_remind_later">Daha Sonra Hatırlat</button>
     </div>
   </div>
@@ -846,7 +879,7 @@
     <h3 id="pass-modal-title" style="margin:0 0 15px 0; color:var(--text-primary);" data-i18n="disarm_alarm_title">Alarmı Kapat</h3>
     <input type="password" id="alarmInputPass" placeholder="Şifre" data-i18n-ph="pin_ph" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; background:var(--bg-control); color:#fff; text-align:center; letter-spacing:4px; font-size:18px; box-sizing:border-box;">
     <div style="display:flex; gap:10px;">
-      <button type="button" onclick="sifreGonder()" class="womo-btn-action" style="background:var(--accent-magenta); flex:1;" data-i18n="btn_confirm">Onayla</button>
+      <button type="button" onclick="sifreGonder()" class="womo-btn-action active-magenta" style="flex:1;" data-i18n="btn_confirm">Onayla</button>
       <button type="button" onclick="document.getElementById('pass-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track); flex:1;" data-i18n="btn_cancel">İptal</button>
     </div>
   </div>
@@ -858,7 +891,7 @@
     <div id="alertIcon" style="margin-bottom:15px;"></div>
     <h3 style="margin:0 0 10px 0; color:var(--text-primary); font-size:16px;" id="alertTitle" data-i18n="warning">Uyarı</h3>
     <p style="margin:0 0 20px 0; font-size:13px; color:var(--text-muted);" id="alertMsg">Mesaj</p>
-    <button type="button" onclick="document.getElementById('alert-modal').style.display='none'" class="womo-btn-action" style="background:var(--accent-magenta);" data-i18n="ok">Tamam</button>
+    <button type="button" onclick="document.getElementById('alert-modal').style.display='none'" class="womo-btn-action active-magenta" data-i18n="ok">Tamam</button>
   </div>
 </div>
 
@@ -1542,15 +1575,19 @@ function updateThemeButtonsUI(theme) {
   if (bDark && bLight) {
     if (isDark) {
       bDark.style.background = 'var(--accent-magenta)';
-      bDark.style.color = '#fff';
+      bDark.style.color = '#FFFFFF';
+      bDark.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
       bLight.style.background = 'transparent';
       bLight.style.color = 'var(--text-muted)';
+      bLight.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
       if (lblTheme) lblTheme.innerText = dict.dark_mode || 'Karanlık Mod';
     } else {
       bLight.style.background = 'var(--accent-magenta)';
-      bLight.style.color = '#fff';
+      bLight.style.color = '#FFFFFF';
+      bLight.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
       bDark.style.background = 'transparent';
       bDark.style.color = 'var(--text-muted)';
+      bDark.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
       if (lblTheme) lblTheme.innerText = dict.light_mode || 'Aydınlık Mod';
     }
   }
@@ -2520,11 +2557,13 @@ function buildConfigFormInputs(cfg) {
   var rNm = rawRNm.map(safeDecodeName);
   var rHtml = '';
   for (var i = 0; i < 7; i++) {
+    // Röle 1 (Su Pompası - r0) ve Röle 2 (İnvertör - r1) sistem fonksiyonları olduğundan ayarlar menüsünden kaldırılmıştır
+    if (i === 0 || i === 1) continue;
     var nm = safeDecodeName(rNm[i]) || ('Röle ' + (i+1));
     var safeVal = nm.replace(/"/g, '&quot;');
     rHtml += '<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">' +
       '<input type="checkbox" id="cfg_r' + i + '_en" style="width:18px;height:18px;" ' + (rEn[i] ? 'checked' : '') + '>' +
-      '<input type="text" id="cfg_r' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px;">' +
+      '<input type="text" id="cfg_r' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:var(--text-primary); border:1px solid var(--border-card); padding:8px 12px; border-radius:8px;">' +
     '</div>';
   }
   var rCont = document.getElementById('relayConfigContainer');
@@ -2539,7 +2578,7 @@ function buildConfigFormInputs(cfg) {
     var safeVal = nm.replace(/"/g, '&quot;');
     pHtml += '<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">' +
       '<input type="checkbox" id="cfg_p' + i + '_en" style="width:18px;height:18px;" ' + (pEn[i] ? 'checked' : '') + '>' +
-      '<input type="text" id="cfg_p' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px;">' +
+      '<input type="text" id="cfg_p' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:var(--text-primary); border:1px solid var(--border-card); padding:8px 12px; border-radius:8px;">' +
     '</div>';
   }
   var pCont = document.getElementById('pwmConfigContainer');
@@ -2638,7 +2677,7 @@ function kaydetAyarlar() {
     var enEl = document.getElementById('cfg_r' + i + '_en');
     var nmEl = document.getElementById('cfg_r' + i + '_nm');
     var isEn = enEl ? enEl.checked : true;
-    var rawNm = nmEl ? nmEl.value.trim() : ('Röle ' + (i+1));
+    var rawNm = nmEl ? nmEl.value.trim() : (defaultRelayNames[i] || ('Röle ' + (i+1)));
     var cleanNm = safeDecodeName(rawNm);
     cfgObj.rEn.push(isEn);
     cfgObj.rNm.push(cleanNm);
