@@ -1,0 +1,2776 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Adria Karavan">
+  <meta name="theme-color" content="#080B15">
+    <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Adria Karavan - WomoNet Smart Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-app: #080B15;
+      --bg-card: #131728;
+      --bg-card-hover: #191E32;
+      --bg-control: #21273D;
+      --bg-track: #252D48;
+      --accent-magenta: #C026D3;
+      --accent-magenta-glow: rgba(192, 38, 211, 0.4);
+      --accent-blue: #00A3FF;
+      --accent-blue-glow: rgba(0, 163, 255, 0.35);
+      --accent-grey: #5C677D;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --text-primary: #FFFFFF;
+      --text-muted: #8F97B0;
+      --border-card: rgba(255, 255, 255, 0.05);
+      --radius-card: 18px;
+      --radius-control: 14px;
+    }
+
+    body.light-mode {
+      --bg-app: #F0F2F5;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F8FAFC;
+      --bg-control: #F1F4F9;
+      --bg-track: #E2E8F0;
+      --accent-magenta: #C026D3;
+      --accent-magenta-glow: rgba(192, 38, 211, 0.25);
+      --accent-blue: #0284C7;
+      --accent-blue-glow: rgba(2, 132, 199, 0.25);
+      --accent-grey: #64748B;
+      --accent-green: #16A34A;
+      --accent-amber: #D97706;
+      --accent-red: #DC2626;
+      --text-primary: #0F172A;
+      --text-muted: #64748B;
+      --border-card: rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      -webkit-overflow-scrolling: auto;
+    }
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      user-select: none;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    body.light-mode .womo-bottom-bar {
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    }
+    body.light-mode .modal-overlay {
+      background: rgba(15, 23, 42, 0.65);
+    }
+    body.light-mode .modal-box {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+    }
+    body.light-mode .womo-card {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode input, body.light-mode select {
+      background: var(--bg-track) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-card) !important;
+    }
+    body.light-mode input::placeholder {
+      color: var(--text-muted) !important;
+    }
+    body.light-mode .ble-info-card {
+      background: var(--bg-control);
+    }
+    body.light-mode .ble-info-row {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .womo-relay-tile:not(.active) {
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .womo-btn-action:not(.active-magenta):not(.active-blue) {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Ana Konteyner */
+    .womo-app { width: 100%; max-width: 520px; margin: 0 auto; position: relative; }
+    @media (min-width: 900px) {
+      .womo-app { max-width: 920px; }
+      .womo-card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    }
+
+    /* Üst Bar (Header) */
+    .womo-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; height: 64px; }
+    .womo-header-left { display: flex; align-items: center; gap: 10px; }
+    .logo-adria {
+      width: 130px;
+      height: 26px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-image: url('data:image/png;base64,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');
+      transition: background-image 0.2s ease;
+    }
+    body.light-mode .logo-adria {
+      background-image: url('data:image/png;base64,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');
+    }
+    .womo-header-right { display: flex; align-items: center; gap: 8px; }
+
+    /* BLE Rozeti */
+    .ble-pill {
+      display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-card);
+      padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 700; color: var(--text-primary);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: all 0.2s ease;
+    }
+    .ble-pill:active { transform: scale(0.96); }
+    .ble-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-red); display: inline-block; transition: background 0.3s; }
+    .ble-dot.connected { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+
+    .header-icon-btn {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--bg-card); display: flex; align-items: center;
+      justify-content: center; color: var(--text-muted); border: 1px solid var(--border-card); cursor: pointer; transition: all 0.2s;
+    }
+    .header-icon-btn:active { transform: scale(0.94); color: var(--text-primary); }
+
+    /* WomoNet Kart Yapısı */
+    .womo-card {
+      background: var(--bg-card); border-radius: var(--radius-card); padding: 16px; margin: 0 14px 14px 14px;
+      border: 1px solid var(--border-card); box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    }
+    .womo-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .womo-card-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .womo-card-title svg { color: var(--text-muted); flex-shrink: 0; }
+
+    /* Parametre Etiketleri & Değerleri */
+    .param-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+    .stat-val-med { font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline; gap: 2px; line-height: 1.1; margin-top: 3px; }
+    .stat-unit { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-left: 2px; }
+
+    /* Sekme Sayfaları (Pages) */
+    .womo-page { display: none; opacity: 0; transition: opacity 0.2s ease; }
+    .womo-page.active { display: block; opacity: 1; }
+
+    /* Alt Navigasyon Çubuğu (Bottom Navigation Bar) */
+    .womo-bottom-bar {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 520px; height: 68px;
+      background: rgba(19, 23, 40, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; align-items: center;
+      z-index: 1000; padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .womo-tab {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%;
+      color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; gap: 3px;
+    }
+    .womo-tab svg { width: 22px; height: 22px; transition: color 0.2s; }
+    .womo-tab span { font-size: 10px; font-weight: 600; white-space: nowrap; }
+    .womo-tab.active { color: var(--accent-magenta); }
+    .womo-tab.active svg { color: var(--accent-magenta); filter: drop-shadow(0 0 6px var(--accent-magenta-glow)); }
+
+    /* İklim 3-Sütunlu Bar (Climate Widget) */
+    .climate-bar-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--bg-control);
+      padding: 12px; border-radius: 14px; text-align: center;
+    }
+    .climate-item { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .climate-val {
+      font-size: 18px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline;
+      justify-content: center; gap: 2px; margin-top: 2px; line-height: 1.1;
+    }
+
+    /* Akü Ring Göstergesi (WomoNet SVG Circle) */
+    .bat-gauge-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px auto 14px auto; }
+    .bat-svg-box { width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
+    .stat-4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg-control); padding: 14px; border-radius: 16px; margin-bottom: 12px; }
+    .stat-box { display: flex; flex-direction: column; }
+
+    /* Solar MPPT 3-Sütunlu Izgara */
+    .solar-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+    .solar-stat-card { background: var(--bg-control); padding: 10px 6px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .solar-stat-val { font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline; justify-content: center; gap: 2px; margin-top: 2px; }
+    .solar-yield-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg-control); padding: 10px 14px; border-radius: 12px; }
+
+    /* WomoNet Çift Yarım Daire Tank Göstergesi (Dual Semicircular Arc) */
+    .dual-tank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .tank-box { background: var(--bg-control); border-radius: 16px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .tank-arc-svg { width: 105px; height: 60px; overflow: visible; }
+    .tank-title { font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text-primary); }
+
+    /* Röle Butonları (WomoNet Stili) */
+    .relay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .womo-relay-tile {
+      background: var(--bg-control); border-radius: 14px; padding: 12px 14px; display: flex;
+      flex-direction: column; justify-content: space-between; min-height: 72px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .womo-relay-tile:active { transform: scale(0.97); }
+    .womo-relay-tile.active,
+    body.light-mode .womo-relay-tile.active {
+      background: var(--accent-magenta) !important;
+      border-color: var(--accent-magenta) !important;
+      box-shadow: 0 4px 18px var(--accent-magenta-glow);
+      color: #FFFFFF !important;
+    }
+    .womo-relay-tile.active *,
+    body.light-mode .womo-relay-tile.active * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
+    }
+    .relay-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .relay-title { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
+    .relay-status { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .womo-relay-tile.active .relay-title,
+    body.light-mode .womo-relay-tile.active .relay-title { color: #FFFFFF !important; }
+    .womo-relay-tile.active .relay-status,
+    body.light-mode .womo-relay-tile.active .relay-status { color: rgba(255,255,255,0.95) !important; }
+    .womo-relay-tile.active svg,
+    body.light-mode .womo-relay-tile.active svg { stroke: #FFFFFF !important; color: #FFFFFF !important; }
+
+    /* Dimmer Kaydırıcılar (WomoNet Inline Sliders) */
+    .dimmer-list { display: flex; flex-direction: column; gap: 12px; }
+    .dimmer-item { background: var(--bg-control); border-radius: 14px; padding: 12px 14px; }
+    .dimmer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer; }
+    .dimmer-perc { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+    .dimmer-perc.active { color: var(--accent-magenta); }
+    .dimmer-row { display: flex; align-items: center; gap: 12px; }
+    .dimmer-row svg { flex-shrink: 0; }
+
+    /* Özel Range Input */
+    input[type=range].womo-slider {
+      -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--bg-track); outline: none; margin: 0; flex: 1;
+    }
+    input[type=range].womo-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-magenta);
+      cursor: pointer; box-shadow: 0 0 10px var(--accent-magenta-glow); border: 2px solid #FFFFFF;
+    }
+
+    /* WomoNet Büyük Buton (Multiplus / Pompa) */
+    .womo-btn-action {
+      background: var(--bg-control); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--radius-control); padding: 12px 14px; font-size: 13px; font-weight: 700; width: 100%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s;
+    }
+    .womo-btn-action:active { transform: scale(0.98); }
+    .womo-btn-action.active-magenta,
+    .womo-btn-action[style*="accent-magenta"],
+    button[style*="accent-magenta"],
+    body.light-mode .womo-btn-action.active-magenta,
+    body.light-mode .womo-btn-action[style*="accent-magenta"],
+    body.light-mode button[style*="accent-magenta"] {
+      background: var(--accent-magenta) !important;
+      border-color: var(--accent-magenta) !important;
+      box-shadow: 0 4px 18px var(--accent-magenta-glow);
+      color: #FFFFFF !important;
+    }
+    .womo-btn-action.active-magenta *,
+    .womo-btn-action[style*="accent-magenta"] *,
+    button[style*="accent-magenta"] *,
+    body.light-mode .womo-btn-action.active-magenta *,
+    body.light-mode .womo-btn-action[style*="accent-magenta"] *,
+    body.light-mode button[style*="accent-magenta"] * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
+    }
+    .womo-btn-action.active-blue,
+    body.light-mode .womo-btn-action.active-blue {
+      background: var(--accent-blue) !important;
+      border-color: var(--accent-blue) !important;
+      box-shadow: 0 4px 18px var(--accent-blue-glow);
+      color: #FFFFFF !important;
+    }
+    .womo-btn-action.active-blue *,
+    body.light-mode .womo-btn-action.active-blue * {
+      color: #FFFFFF !important;
+      stroke: #FFFFFF !important;
+    }
+
+    /* Modal Stilleri */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8,11,21,0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .modal-box { background: var(--bg-card); width: 88%; max-width: 340px; padding: 22px; border-radius: 22px; text-align: center; box-shadow: 0 16px 48px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08); }
+
+    /* Radar Animasyonu */
+    .radar-wrap { position: relative; width: 80px; height: 80px; margin: 8px auto 14px auto; display: flex; align-items: center; justify-content: center; }
+    .radar-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--accent-magenta); opacity: 0; pointer-events: none; }
+    .radar-ring.pulse { animation: radar-anim 2s infinite cubic-bezier(0.2,0.8,0.4,1); }
+    .radar-ring.pulse:nth-child(2) { animation-delay: 0.7s; }
+    @keyframes radar-anim { 0% { transform: scale(0.6); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+    .radar-core { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-control); border: 2px solid var(--border-card); display: flex; align-items: center; justify-content: center; color: var(--accent-magenta); box-shadow: 0 4px 16px var(--accent-magenta-glow); z-index: 2; }
+    .radar-core.connected { border-color: var(--accent-green); color: var(--accent-green); box-shadow: 0 0 25px rgba(34,197,94,0.4); }
+    .ble-stat-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 14px; }
+    .ble-stat-badge.disconnected { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+    .ble-stat-badge.connected { background: rgba(34,197,94,0.15); color: var(--accent-green); }
+    .ble-info-card { background: var(--bg-control); border-radius: 14px; padding: 10px 12px; margin-bottom: 14px; text-align: left; font-size: 12px; }
+    .ble-info-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .ble-info-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="womo-app">
+
+  <!-- ========================================== -->
+  <!-- HEADER (LOGO & BLE)                        -->
+  <!-- ========================================== -->
+  <header class="womo-header">
+    <div class="womo-header-left">
+      <div class="logo-adria"></div>
+    </div>
+    <div class="womo-header-right">
+      <div class="ble-pill" id="blePillBtn" onclick="openBleModal()" title="Bluetooth Bağlantı Merkezi">
+        <span class="ble-dot" id="bleDot"></span>
+        <span id="blePillText">BLE</span>
+      </div>
+      <div class="header-icon-btn" onclick="switchWomoTab('tab-settings')" title="Ayarlar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 1. TAB: ENERJİ & GENEL BAKIŞ (VARSAYILAN)  -->
+  <!-- ========================================== -->
+  <div id="tab-energy" class="womo-page active">
+    <!-- Sıcaklık & Nem Kartı (Hero Climate Bar) -->
+    <div class="womo-card" style="margin-bottom:12px;">
+      <div class="climate-bar-grid">
+        <div class="climate-item">
+          <span class="param-label" data-i18n="in_temp">İÇ ISI</span>
+          <div class="climate-val" id="tempInternal">--<span class="stat-unit">°C</span></div>
+        </div>
+        <div class="climate-item" style="border-left:1px solid rgba(255,255,255,0.06); border-right:1px solid rgba(255,255,255,0.06);">
+          <span class="param-label" data-i18n="humidity">NEM</span>
+          <div class="climate-val" id="humInternal">--<span class="stat-unit">%</span></div>
+        </div>
+        <div class="climate-item">
+          <span class="param-label" data-i18n="out_temp">DIŞ ISI</span>
+          <div class="climate-val" id="tempExternal">--<span class="stat-unit">°C</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Akü Durumu (Junctek Hero Card) -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg>
+          <span data-i18n="battery_card">Akü Durumu (Junctek)</span>
+        </div>
+      </div>
+
+      <!-- WomoNet Daire Gauge -->
+      <div class="bat-gauge-wrap">
+        <div class="bat-svg-box">
+          <svg viewBox="0 0 140 140" width="130" height="130" style="overflow:visible;">
+            <circle cx="70" cy="70" r="54" fill="none" stroke="var(--bg-track)" stroke-width="10"/>
+            <circle id="bat-circle" cx="70" cy="70" r="54" fill="none" stroke="var(--accent-magenta)" stroke-width="10" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 1s ease, stroke 0.4s ease;"/>
+            <text x="70" y="70" text-anchor="middle" dominant-baseline="central" font-size="28" font-weight="700" fill="var(--text-primary)" id="bat-perc">%0</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 4 Parametre Kutusu -->
+      <div class="stat-4-grid">
+        <div class="stat-box">
+          <span class="param-label" data-i18n="voltage">VOLTAJ</span>
+          <div class="stat-val-med" id="batteryVoltage">0.0<span class="stat-unit">V</span></div>
+        </div>
+        <div class="stat-box">
+          <span class="param-label" data-i18n="current">AKIM</span>
+          <div class="stat-val-med" id="batteryFlowText" style="color:var(--text-muted);">0.0<span class="stat-unit">A</span></div>
+        </div>
+        <div class="stat-box">
+          <span class="param-label" data-i18n="power">TÜKETİM</span>
+          <div class="stat-val-med" id="batteryWatts">0<span class="stat-unit">W</span></div>
+        </div>
+        <div class="stat-box">
+          <span class="param-label" data-i18n="battery_cap_left">KALAN KAPASİTE</span>
+          <div class="stat-val-med" id="batteryAh">0<span class="stat-unit">Ah</span></div>
+        </div>
+      </div>
+
+      <!-- İnvertör Kontrol Butonu -->
+      <button type="button" class="womo-btn-action" id="btn_inverter" onclick="toggleRelay('r1')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+        <span id="st_inverter_btn">İnvertör Kapalı</span>
+      </button>
+    </div>
+
+    <!-- Güneş Paneli (Victron MPPT) -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span data-i18n="solar_panel">Güneş Paneli (Victron MPPT)</span>
+        </div>
+        <span id="solarCs" style="font-size:11px; font-weight:700; padding:4px 10px; border-radius:12px; background:rgba(245,158,11,0.15); color:#f59e0b;">Bilinmiyor</span>
+      </div>
+
+      <div class="solar-grid-3">
+        <div class="solar-stat-card">
+          <span class="param-label" data-i18n="panel_power">GÜÇ</span>
+          <div class="solar-stat-val" id="solarPpv">0<span class="stat-unit">W</span></div>
+        </div>
+        <div class="solar-stat-card">
+          <span class="param-label" data-i18n="panel_volt">VOLTAJ</span>
+          <div class="solar-stat-val" id="solarVpv">0.0<span class="stat-unit">V</span></div>
+        </div>
+        <div class="solar-stat-card">
+          <span class="param-label" data-i18n="chg_current">ŞARJ</span>
+          <div class="solar-stat-val" id="solarI">0.0<span class="stat-unit">A</span></div>
+        </div>
+      </div>
+      <div class="solar-yield-row">
+        <span class="param-label" data-i18n="daily_yield">GÜNLÜK ÜRETİM</span>
+        <span style="font-size:15px; font-weight:700; color:var(--text-primary);" id="solarYield">0.00 kWh</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. TAB: AYDINLATMA & CİHAZLAR (LICHT)      -->
+  <!-- ========================================== -->
+  <div id="tab-light" class="womo-page">
+    <!-- Ana Sistem Şalteri -->
+    <div class="womo-card" style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div class="param-label" data-i18n="system_status">SİSTEM DURUMU</div>
+          <div style="font-size:17px; font-weight:700; color:var(--text-primary); margin-top:2px;" id="st_sistem_text">Kapalı</div>
+        </div>
+        <button type="button" class="womo-btn-action" id="card_sistem" onclick="toggleRelay('sistem')" style="width:auto; padding:10px 18px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+          <span id="st_sistem" data-i18n="system_switch">Ana Şalter</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Röleler & Anahtarlar -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 12h12"/></svg>
+          <span data-i18n="relay_settings">Röle Kontrolleri</span>
+        </div>
+      </div>
+      <div class="relay-grid" id="ctrlGridRelays">
+        <!-- Dinamik r0 - r6 yüklenecek -->
+      </div>
+    </div>
+
+    <!-- Dimmer Aydınlatma (WomoNet Sliders) -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span data-i18n="pwm_settings">Dimmer Aydınlatma</span>
+        </div>
+      </div>
+      <div class="dimmer-list" id="ctrlGridDimmers">
+        <!-- Dinamik p0 - p3 yüklenecek -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. TAB: SU & TANKLAR (WASSER)              -->
+  <!-- ========================================== -->
+  <div id="tab-water" class="womo-page">
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          <span data-i18n="tanks">Tank Seviyeleri</span>
+        </div>
+      </div>
+
+      <div class="dual-tank-grid">
+        <!-- Temiz Su -->
+        <div class="tank-box" id="card_temiz_su">
+          <div style="width: 100px; height: 100px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 140 140" width="100" height="100" style="overflow:visible;">
+              <circle cx="70" cy="70" r="54" fill="none" stroke="var(--bg-track)" stroke-width="10"/>
+              <circle id="arc-temiz-su" cx="70" cy="70" r="54" fill="none" stroke="var(--accent-blue)" stroke-width="10" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;"/>
+              <text x="70" y="70" text-anchor="middle" dominant-baseline="central" font-size="26" font-weight="700" fill="var(--text-primary)" id="temiz-su-val" class="val-temiz-text">%0</text>
+            </svg>
+          </div>
+          <div class="tank-title" data-i18n="fresh_water">Temiz Su</div>
+          <span class="param-label" style="margin-top:2px;" id="lbl_temiz_tank_st">Boş</span>
+        </div>
+
+        <!-- Gri Su -->
+        <div class="tank-box" id="card_gri_su">
+          <div style="width: 100px; height: 100px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 140 140" width="100" height="100" style="overflow:visible;">
+              <circle cx="70" cy="70" r="54" fill="none" stroke="var(--bg-track)" stroke-width="10"/>
+              <circle id="arc-gri-su" cx="70" cy="70" r="54" fill="none" stroke="var(--accent-grey)" stroke-width="10" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;"/>
+              <text x="70" y="70" text-anchor="middle" dominant-baseline="central" font-size="26" font-weight="700" fill="var(--text-primary)" id="gri-su-val" class="val-gri-text">%0</text>
+            </svg>
+          </div>
+          <div class="tank-title" data-i18n="grey_water">Gri Su</div>
+          <span class="param-label" style="margin-top:2px;" id="lbl_gri_tank_st">Boş</span>
+        </div>
+      </div>
+
+      <!-- Su Pompası (Hidrofor) -->
+      <button type="button" class="womo-btn-action" id="btn_pump" onclick="toggleRelay('r0')" style="margin-top:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span id="st_pump_btn" data-i18n="water_pump">Su Pompası (Hidrofor)</span>
+      </button>
+
+      <div id="badge_dry_run" style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:10px; font-size:11px; color:#22c55e; font-weight:600;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span data-i18n="dry_run_prot">Susuz Çalışma Koruması Aktif</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 4. TAB: İKLİM & GÜVENLİK (KLIMA)           -->
+  <!-- ========================================== -->
+  <div id="tab-climate" class="womo-page">
+    <!-- Sıcaklık & Nem -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+          <span data-i18n="environment">Ortam Sıcaklık & Nem</span>
+        </div>
+      </div>
+      <div class="climate-bar-grid">
+        <div class="climate-item">
+          <span class="param-label" data-i18n="in_temp">İÇ ISI</span>
+          <div class="climate-val val-temp-in">--<span class="stat-unit">°C</span></div>
+        </div>
+        <div class="climate-item" style="border-left:1px solid rgba(255,255,255,0.06); border-right:1px solid rgba(255,255,255,0.06);">
+          <span class="param-label" data-i18n="humidity">NEM</span>
+          <div class="climate-val val-hum-in">--<span class="stat-unit">%</span></div>
+        </div>
+        <div class="climate-item">
+          <span class="param-label" data-i18n="out_temp">DIŞ ISI</span>
+          <div class="climate-val val-temp-out">--<span class="stat-unit">°C</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Güvenlik & Alarm Sistemi -->
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-magenta)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span data-i18n="security">Güvenlik & Alarm</span>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-control); border-radius:14px; padding:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:15px; font-weight:700; color:var(--text-primary);" id="alarmStatusText">Alarm Kapalı</div>
+          <div class="param-label" style="margin-top:3px;" id="alarmSubText">Sistem devrede değil</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" onclick="kurAlarm()" id="btnAlarmKur" class="womo-btn-action active-magenta" style="padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="arm_alarm">Alarmı Kur</button>
+          <button type="button" onclick="kapatAlarmModalAc()" id="btnAlarmKapat" style="display:none; background:#ef4444; color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="disarm_alarm">Alarmı Kapat</button>
+        </div>
+      </div>
+
+      <!-- Sensör Göstergeleri -->
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1; background:var(--bg-control); padding:10px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#22c55e;" id="ind_h"></span>
+          <span style="font-size:12px; font-weight:600;">Kapı/Pencere</span>
+        </div>
+        <div style="flex:1; background:var(--bg-control); padding:10px; border-radius:12px; display:flex; align-items:center; gap:8px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#22c55e;" id="ind_g"></span>
+          <span style="font-size:12px; font-weight:600;">Gaz Sensörü</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 5. TAB: AYARLAR (SYSTEM)                   -->
+  <!-- ========================================== -->
+  <div id="tab-settings" class="womo-page">
+    <div class="womo-card">
+      <div class="womo-card-header">
+        <div class="womo-card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
+          <span data-i18n="ble_conn">Bluetooth Bağlantısı & Güvenlik</span>
+        </div>
+      </div>
+      <button type="button" class="womo-btn-action active-magenta" onclick="openBleModal()" style="margin-bottom:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
+        <span data-i18n="ble_modal_title">Bluetooth Bağlantı Merkezi</span>
+      </button>
+
+      <!-- Doğrudan Şifre Değiştirme -->
+      <div style="background:var(--bg-control); border-radius:14px; padding:14px; margin-bottom:8px;">
+        <div class="param-label" style="margin-bottom:8px;" data-i18n="ble_sec_pin">Bluetooth Güvenlik Şifresi (PIN)</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;">
+          <input type="password" id="inputOldBlePin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff; text-align:center;">
+          <input type="password" id="inputNewBlePin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff; text-align:center;">
+        </div>
+        <button type="button" class="womo-btn-action" onclick="degistirBlePinDirect()" style="background:var(--bg-track); font-size:12px; padding:10px;">
+          <span data-i18n="ble_chg_btn">PIN'i Değiştir</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sistem Ayarları Formu -->
+    <div class="womo-card">
+      <form id="settingsForm" onsubmit="event.preventDefault(); kaydetAyarlar();">
+        <div class="womo-card-header">
+          <div class="womo-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span data-i18n="system_settings">Sistem Ayarları</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <!-- Dil ve Temalar -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="lang_and_theme">Dil ve Temalar</div>
+            <div style="margin-bottom:10px;">
+              <label class="param-label" style="display:block; margin-bottom:4px;" data-i18n="language_lbl">Dil / Language</label>
+              <select id="sys_dil" onchange="changeLanguage(this.value)" style="width:100%; background:var(--bg-track); color:var(--text-primary); border:1px solid var(--border-card); padding:10px; border-radius:10px; font-weight:600;">
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="it">🇮🇹 Italiano</option>
+              </select>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+              <div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-primary);" data-i18n="theme_lbl">Tema Seçimi</div>
+                <div style="font-size:11px; color:var(--text-muted);" id="lbl_current_theme" data-i18n="dark_mode">Karanlık Mod</div>
+              </div>
+              <div style="display:flex; background:var(--bg-track); border-radius:10px; padding:3px; gap:4px; border:1px solid var(--border-card);">
+                <button type="button" id="btn_theme_dark" onclick="setAppTheme('dark')" style="padding:6px 12px; border-radius:8px; border:none; font-size:12px; font-weight:600; cursor:pointer; background:var(--accent-magenta); color:#fff; display:flex; align-items:center; gap:4px; transition:all 0.2s;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  <span data-i18n="theme_dark">Karanlık</span>
+                </button>
+                <button type="button" id="btn_theme_light" onclick="setAppTheme('light')" style="padding:6px 12px; border-radius:8px; border:none; font-size:12px; font-weight:600; cursor:pointer; background:transparent; color:var(--text-muted); display:flex; align-items:center; gap:4px; transition:all 0.2s;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  <span data-i18n="theme_light">Aydınlık</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tank Ayarları -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="tanks">Tank Ayarları</div>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_s_temiz" checked> <span data-i18n="show_fresh">Temiz Su Göster</span></label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_s_gri" checked> <span data-i18n="show_grey">Gri Su Göster</span></label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_h_koruma" checked> <span data-i18n="dry_run_prot">Hidrofor Susuz Koruma</span></label>
+            <select id="cfg_p_tip" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px;">
+              <option value="4_level">4 Kademeli Prob</option>
+              <option value="single">Tek Şamandıra</option>
+            </select>
+          </div>
+
+          <!-- Akü Ayarları -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="battery_settings">Akü Ayarları</div>
+            <select id="cfg_aku_tipi" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:8px;">
+              <option value="lifepo4">LiFePO4 (Lityum)</option>
+              <option value="agm">AGM</option>
+              <option value="gel">Jel</option>
+              <option value="lead">Kurşun-Asit</option>
+            </select>
+            <input type="number" id="cfg_aku_kapasite" value="100" placeholder="Kapasite (Ah)" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:10px;">
+
+            <!-- Başlangıç Kalibrasyonu (%100 Manuel Giriş) -->
+            <div class="param-label" style="margin-bottom:6px;" data-i18n="start_calib">Akü Başlangıç Kalibrasyonu</div>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; margin-bottom:8px;">
+              <label style="background:var(--bg-track); padding:8px 4px; border-radius:8px; font-size:11px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;"><input type="radio" name="aku_yontem" value="koru" checked onclick="toggleManuel(false)"> <span data-i18n="current_val">Mevcut</span></label>
+              <label style="background:var(--bg-track); padding:8px 4px; border-radius:8px; font-size:11px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;"><input type="radio" name="aku_yontem" value="dolu" onclick="toggleManuel(false)"> <span data-i18n="full_val">%100 Dolu</span></label>
+              <label style="background:var(--bg-track); padding:8px 4px; border-radius:8px; font-size:11px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;"><input type="radio" name="aku_yontem" value="bos" onclick="toggleManuel(false)"> <span data-i18n="empty_val">%0 Boş</span></label>
+              <label style="background:var(--bg-track); padding:8px 4px; border-radius:8px; font-size:11px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;"><input type="radio" name="aku_yontem" value="manuel" onclick="toggleManuel(true)"> <span data-i18n="manual_val">Manuel</span></label>
+            </div>
+            <div id="manuelDiv" style="display:none;">
+              <input type="number" id="cfg_aku_manuel_yuzde" placeholder="Manuel Yüzde (%0 - %100)" min="0" max="100" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; text-align:center;">
+            </div>
+          </div>
+
+          <!-- Alarm Ayarları -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="security_alarm">Alarm Ayarları</div>
+            <input type="password" id="cfg_al_pass" value="1234" placeholder="Alarm Şifresi" style="width:100%; box-sizing:border-box; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:8px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div>
+                <label class="param-label" style="display:block; margin-bottom:4px;" data-i18n="exit_delay">Çıkış Gecikmesi (sn)</label>
+                <input type="number" id="cfg_al_cikis" value="30" placeholder="30" style="width:100%; box-sizing:border-box; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px;">
+              </div>
+              <div>
+                <label class="param-label" style="display:block; margin-bottom:4px;" data-i18n="entry_delay">Giriş Gecikmesi (sn)</label>
+                <input type="number" id="cfg_al_giris" value="30" placeholder="30" style="width:100%; box-sizing:border-box; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Röle İsimlendirmeleri -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="relay_settings">Röle İsimlendirmeleri</div>
+            <div id="relayConfigContainer"></div>
+          </div>
+
+          <!-- Dimmer İsimlendirmeleri -->
+          <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
+            <div class="param-label" style="margin-bottom:8px;" data-i18n="pwm_settings">Dimmer İsimlendirmeleri</div>
+            <div id="pwmConfigContainer"></div>
+          </div>
+
+          <!-- Kaydet Butonu -->
+          <button type="submit" class="womo-btn-action active-magenta" style="padding:14px; font-size:15px; margin-top:4px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="save_settings">Ayarları Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ALT NAVİGASYON ÇUBUĞU (BOTTOM TAB BAR)     -->
+  <!-- ========================================== -->
+  <nav class="womo-bottom-bar">
+    <div class="womo-tab active" onclick="switchWomoTab('tab-energy')" id="tabBtn-energy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span data-i18n="womo_tab_energy">Genel Bakış</span>
+    </div>
+    <div class="womo-tab" onclick="switchWomoTab('tab-light')" id="tabBtn-light">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span data-i18n="womo_tab_light">Aydınlatma</span>
+    </div>
+    <div class="womo-tab" onclick="switchWomoTab('tab-water')" id="tabBtn-water">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+      <span data-i18n="womo_tab_water">Su & Tank</span>
+    </div>
+    <div class="womo-tab" onclick="switchWomoTab('tab-climate')" id="tabBtn-climate">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+      <span data-i18n="womo_tab_climate">İklim & Alarm</span>
+    </div>
+    <div class="womo-tab" onclick="switchWomoTab('tab-settings')" id="tabBtn-settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span data-i18n="womo_tab_settings">Ayarlar</span>
+    </div>
+  </nav>
+
+<!-- ========================================== -->
+<!-- MODALLAR                                   -->
+<!-- ========================================== -->
+
+<!-- BLUETOOTH BAĞLANTI & YÖNETİM MERKEZİ MODALI -->
+<div id="ble-modal" class="modal-overlay" style="z-index:99998;">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+      <h3 style="margin:0; font-size:16px; color:var(--text-primary); font-weight:700;" data-i18n="ble_modal_title">Bluetooth Bağlantı Merkezi</h3>
+      <div onclick="document.getElementById('ble-modal').style.display='none'" style="cursor:pointer; color:var(--text-muted); padding:4px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+
+    <!-- Animasyonlu Radar & Bluetooth İkonu -->
+    <div class="radar-wrap">
+      <div class="radar-ring" id="radarRing1"></div>
+      <div class="radar-ring" id="radarRing2"></div>
+      <div class="radar-core" id="radarCore">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Durum Rozeti -->
+    <div id="bleModalBadge" class="ble-stat-badge disconnected">
+      <span class="ble-dot" id="bleModalDot"></span>
+      <span id="bleModalStatusText" data-i18n="ble_disconnected">Bağlı Değil</span>
+    </div>
+
+    <!-- Bilgi Kartı -->
+    <div class="ble-info-card">
+      <div class="ble-info-row">
+        <span class="param-label" data-i18n="ble_target">HEDEF CİHAZ</span>
+        <span style="font-weight:700; color:#fff;">Karavan_BLE</span>
+      </div>
+      <div class="ble-info-row">
+        <span class="param-label" data-i18n="ble_sec">GÜVENLİK</span>
+        <span style="font-weight:700;" id="bleModalSecStatus">6 Haneli PIN</span>
+      </div>
+      <div class="ble-info-row">
+        <span class="param-label" data-i18n="ble_telemetry">TELEMETRİ</span>
+        <span style="font-weight:700;" id="bleModalTelemStatus">Hazır</span>
+      </div>
+    </div>
+
+    <!-- Dinamik Butonlar -->
+    <div id="bleModalActions">
+      <button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action active-magenta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
+        <span data-i18n="ble_connect_btn">Karavana Bağlan</span>
+      </button>
+      <p id="bleModalPromptHelp" style="font-size:11px; color:var(--text-muted); margin-top:10px; margin-bottom:0;" data-i18n="ble_prompt_hint">Açılan pencerede 'Karavan_BLE' seçip 'Eşle' butonuna basın.</p>
+    </div>
+  </div>
+</div>
+
+<!-- İLK BAĞLANTI & PIN DEĞİŞTİRME GÜVENLİK MODALI -->
+<div id="ble-pin-modal" class="modal-overlay" style="z-index:100000;">
+  <div class="modal-box">
+    <div style="width:48px; height:48px; border-radius:50%; background:rgba(245,158,11,0.15); color:#f59e0b; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <h3 style="margin:0 0 8px 0; font-size:16px; color:var(--text-primary); font-weight:700;" id="blePinModalTitle" data-i18n="ble_sec_advice">Güvenlik Önerisi</h3>
+    <p style="font-size:12px; color:var(--text-muted); margin:0 0 16px 0; line-height:1.4;" id="blePinModalDesc" data-i18n="ble_default_pin_warn">Karavanınız şu an varsayılan şifre (123456) ile korunuyor. Güvenliğiniz için lütfen yeni bir 6 haneli Bluetooth PIN belirleyin.</p>
+
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+      <div id="oldPinRow" style="display:none;">
+        <input type="password" id="modalOldPin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_cur_pin">
+      </div>
+      <input type="password" id="modalNewPin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_new_pin">
+      <input type="password" id="modalNewPin2" placeholder="Yeni PIN (Tekrar)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_new_pin_repeat">
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button type="button" onclick="submitBlePinChange()" class="womo-btn-action active-magenta" data-i18n="ble_btn_save_pin">Şifreyi Güncelle</button>
+      <button type="button" onclick="document.getElementById('ble-pin-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track);" data-i18n="ble_btn_remind_later">Daha Sonra Hatırlat</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIMER MODAL (ZAMANLAYICI) -->
+<div id="timer-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="margin:0 0 5px 0; color:var(--text-primary);" id="timerTitle" data-i18n="timer">Zamanlayıcı</h3>
+    <p style="margin:0 0 20px 0; font-size:12px; color:var(--text-muted);" data-i18n="timer_sub">Otomatik kapanma süresini seçin</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+      <button type="button" onclick="setTimer(15)" class="womo-btn-action" data-i18n="min_15">15 Dk</button>
+      <button type="button" onclick="setTimer(30)" class="womo-btn-action" data-i18n="min_30">30 Dk</button>
+      <button type="button" onclick="setTimer(45)" class="womo-btn-action" data-i18n="min_45">45 Dk</button>
+      <button type="button" onclick="setTimer(60)" class="womo-btn-action" data-i18n="min_60">60 Dk</button>
+    </div>
+    <button type="button" onclick="setTimer(0)" style="background:rgba(239,68,68,0.15); color:#ef4444; border:none; padding:12px; border-radius:12px; font-weight:700; width:100%; margin-bottom:10px; cursor:pointer;" data-i18n="cancel_timer">Süresiz (İptal)</button>
+    <button type="button" onclick="document.getElementById('timer-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track);" data-i18n="btn_close">Kapat</button>
+  </div>
+</div>
+
+<!-- ALARM ŞİFRE MODALI -->
+<div id="pass-modal" class="modal-overlay" style="z-index:100005;">
+  <div class="modal-box">
+    <h3 id="pass-modal-title" style="margin:0 0 15px 0; color:var(--text-primary);" data-i18n="disarm_alarm_title">Alarmı Kapat</h3>
+    <input type="password" id="alarmInputPass" placeholder="Şifre" data-i18n-ph="pin_ph" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; background:var(--bg-control); color:#fff; text-align:center; letter-spacing:4px; font-size:18px; box-sizing:border-box;">
+    <div style="display:flex; gap:10px;">
+      <button type="button" onclick="sifreGonder()" class="womo-btn-action active-magenta" style="flex:1;" data-i18n="btn_confirm">Onayla</button>
+      <button type="button" onclick="document.getElementById('pass-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track); flex:1;" data-i18n="btn_cancel">İptal</button>
+    </div>
+  </div>
+</div>
+
+<!-- UYARI (ALERT) MODALI -->
+<div id="alert-modal" class="modal-overlay" style="z-index:9999999;">
+  <div class="modal-box">
+    <div id="alertIcon" style="margin-bottom:15px;"></div>
+    <h3 style="margin:0 0 10px 0; color:var(--text-primary); font-size:16px;" id="alertTitle" data-i18n="warning">Uyarı</h3>
+    <p style="margin:0 0 20px 0; font-size:13px; color:var(--text-muted);" id="alertMsg">Mesaj</p>
+    <button type="button" onclick="document.getElementById('alert-modal').style.display='none'" class="womo-btn-action active-magenta" data-i18n="ok">Tamam</button>
+  </div>
+</div>
+
+<!-- GAZ ALARMI MODALI -->
+<div id="gas-modal" class="modal-overlay" style="background:rgba(220,38,38,0.97); z-index:99999; flex-direction:column; padding:20px;">
+  <svg width="76" height="76" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:pulse 1s infinite;">
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+  </svg>
+  <h1 style="color:#fff; margin:16px 0 0 0; font-size:28px; font-weight:900; letter-spacing:1px;" data-i18n="gas_leak">GAZ KAÇAĞI!</h1>
+  <p style="color:#fff; font-size:15px; font-weight:600; text-align:center; margin:8px 0 20px 0; max-width:280px; line-height:1.4;" data-i18n="gas_leak_sub">DİKKAT GAZ SIZINTISI!<br>Lütfen alanı havalandırın!</p>
+  <div style="background:rgba(0,0,0,0.45); padding:16px; border-radius:16px; width:100%; max-width:280px; display:flex; flex-direction:column; gap:10px; box-sizing:border-box; border:1px solid rgba(255,255,255,0.2);">
+    <input type="password" id="gasAlarmPassInput" placeholder="PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; padding:12px; border:1px solid rgba(255,255,255,0.3); border-radius:10px; background:rgba(0,0,0,0.6); color:#fff; text-align:center; letter-spacing:4px; font-size:18px; box-sizing:border-box;">
+    <button type="button" onclick="susturGasAlarmDirect()" style="background:#FFFFFF; color:#DC2626; border:none; padding:12px; border-radius:10px; font-weight:800; font-size:14px; cursor:pointer;" data-i18n="silence_pin">ŞİFRE İLE SUSTUR</button>
+  </div>
+  <style>@keyframes pulse { 0% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.1); } 100% { opacity:1; transform:scale(1); } }</style>
+</div>
+
+<script>
+// ==========================================
+// 5 DİL SÖZLÜĞÜ (TR, EN, DE, ES, IT)
+// ==========================================
+var I18N = {
+  tr: {
+    system_status: "SİSTEM DURUMU",
+    system_switch: "Ana Şalter",
+    relay_settings: "Röle Kontrolleri",
+    pwm_settings: "Dimmer Aydınlatma",
+    battery_card: "Akü Durumu (Junctek)",
+    voltage: "VOLTAJ",
+    current: "AKIM",
+    power: "TÜKETİM",
+    battery_cap_left: "KALAN KAPASİTE",
+    inverter: "İnvertör (220V AC)",
+    solar_panel: "Güneş Paneli (Victron MPPT)",
+    panel_power: "GÜÇ",
+    panel_volt: "VOLTAJ",
+    chg_current: "ŞARJ AKIMI",
+    daily_yield: "GÜNLÜK ÜRETİM",
+    tanks: "Tank Seviyeleri",
+    fresh_water: "Temiz Su",
+    grey_water: "Gri Su",
+    water_pump: "Su Pompası (Hidrofor)",
+    dry_run_prot: "Susuz Çalışma Koruması Aktif",
+    environment: "Ortam Sıcaklık & Nem",
+    in_temp: "İÇ ISI",
+    humidity: "NEM",
+    out_temp: "DIŞ ISI",
+    security: "Güvenlik & Alarm",
+    arm_alarm: "Alarmı Kur",
+    disarm_alarm: "Alarmı Kapat",
+    ble_conn: "Bluetooth Bağlantısı & Güvenlik",
+    ble_modal_title: "Bluetooth Bağlantı Merkezi",
+    ble_connected: "Bağlandı",
+    ble_disconnected: "Bağlı Değil",
+    ble_connect_btn: "Karavana Bağlan",
+    ble_disconnect_btn: "Bağlantıyı Kes",
+    ble_sec_pin: "Bluetooth Güvenlik Şifresi (PIN)",
+    ble_cur_pin: "Mevcut PIN",
+    ble_new_pin: "Yeni PIN (6 hane)",
+    ble_new_pin_repeat: "Yeni PIN (Tekrar)",
+    ble_chg_btn: "PIN'i Değiştir",
+    ble_target: "HEDEF CİHAZ",
+    ble_sec: "GÜVENLİK",
+    ble_telemetry: "TELEMETRİ",
+    ble_prompt_hint: "Açılan pencerede 'Karavan_BLE' seçip 'Eşle' butonuna basın.",
+    ble_sec_advice: "Güvenlik Önerisi",
+    ble_default_pin_warn: "Karavanınız şu an varsayılan şifre (123456) ile korunuyor. Güvenliğiniz için yeni bir 6 haneli Bluetooth PIN belirleyin.",
+    ble_btn_save_pin: "Şifreyi Güncelle",
+    ble_btn_remind_later: "Daha Sonra Hatırlat",
+    ble_pin_mismatch: "Girdiğiniz yeni şifreler eşleşmiyor!",
+    ble_pin_len_err: "Şifre en az 4 haneli (tercihen 6 hane) olmalıdır!",
+    ble_pin_success: "Bluetooth PIN başarıyla güncellendi!",
+    system_settings: "Sistem Ayarları",
+    language_lbl: "Dil / Language",
+    show_fresh: "Temiz Su Göster",
+    show_grey: "Gri Su Göster",
+    battery_settings: "Akü Ayarları",
+    start_calib: "Akü Başlangıç Kalibrasyonu",
+    current_val: "Mevcut",
+    full_val: "%100 Dolu",
+    empty_val: "%0 Boş",
+    manual_val: "Manuel",
+    security_alarm: "Alarm Ayarları",
+    exit_delay: "Çıkış Gecikmesi (sn)",
+    entry_delay: "Giriş Gecikmesi (sn)",
+    save_settings: "Ayarları Kaydet",
+    on: "Açık",
+    off: "Kapalı",
+    timer: "Zamanlayıcı",
+    timer_sub: "Otomatik kapanma süresini seçin",
+    btn_time: "⏱️ Süre",
+    btn_close: "Kapat",
+    btn_cancel: "İptal",
+    btn_confirm: "Onayla",
+    min_15: "15 Dk",
+    min_30: "30 Dk",
+    min_45: "45 Dk",
+    min_60: "60 Dk",
+    cancel_timer: "Süresiz (İptal)",
+    warning: "Uyarı",
+    ok: "Tamam",
+    gas_leak: "GAZ KAÇAĞI!",
+    gas_leak_sub: "DİKKAT GAZ SIZINTISI!<br>Lütfen alanı havalandırın!",
+    silence_pin: "ŞİFRE İLE SUSTUR",
+    disarm_alarm_title: "Alarmı Kapat",
+    pin_ph: "Şifre",
+    msg_cancel_title: "İptal Edildi",
+    msg_arm_cancel: "Alarm kurulumu iptal edildi.",
+    msg_success: "Başarılı",
+    msg_gas_silent: "Gaz alarmı susturuldu.",
+    msg_alarm_off: "Alarm kapatıldı.",
+    msg_timer_cancel: "Zamanlayıcı iptal edildi.",
+    msg_timer_set: "dakika sonra kapanacak.",
+    msg_err: "Hata",
+    msg_err_pin: "Girdiğiniz şifre hatalı!",
+    msg_pump_prot: "Hidrofor Koruması",
+    msg_pump_empty: "Temiz su deponuz boş olduğu için pompa açılamaz!",
+    msg_sys_off: "Sistem Kapalı",
+    msg_sys_off_desc: "Sistem kapalıyken cihaz açılamaz.",
+    solar_states: ["Kapalı", "", "Arıza", "Bulk", "Absorpsiyon", "Float"],
+    womo_tab_light: "Aydınlatma",
+    womo_tab_energy: "Enerji",
+    womo_tab_water: "Su & Tank",
+    womo_tab_climate: "İklim & Alarm",
+    womo_tab_settings: "Ayarlar",
+    lang_and_theme: "Dil ve Temalar",
+    theme_lbl: "Tema Seçimi",
+    theme_dark: "Karanlık",
+    theme_light: "Aydınlık",
+    dark_mode: "Karanlık Mod",
+    light_mode: "Aydınlık Mod"
+  },
+  en: {
+    system_status: "SYSTEM STATUS",
+    system_switch: "Master Switch",
+    relay_settings: "Relay Controls",
+    pwm_settings: "Dimmer Lighting",
+    battery_card: "Battery Status (Junctek)",
+    voltage: "VOLTAGE",
+    current: "CURRENT",
+    power: "POWER",
+    battery_cap_left: "CAPACITY LEFT",
+    inverter: "Inverter (220V AC)",
+    solar_panel: "Solar Panel (Victron MPPT)",
+    panel_power: "POWER",
+    panel_volt: "VOLTAGE",
+    chg_current: "CHG CURRENT",
+    daily_yield: "DAILY YIELD",
+    tanks: "Tank Levels",
+    fresh_water: "Fresh Water",
+    grey_water: "Grey Water",
+    water_pump: "Water Pump",
+    dry_run_prot: "Dry Run Protection Active",
+    environment: "Climate & Environment",
+    in_temp: "IN TEMP",
+    humidity: "HUMIDITY",
+    out_temp: "OUT TEMP",
+    security: "Security & Alarm",
+    arm_alarm: "Arm Alarm",
+    disarm_alarm: "Disarm Alarm",
+    ble_conn: "Bluetooth Connection & Security",
+    ble_modal_title: "Bluetooth Connection Center",
+    ble_connected: "Connected",
+    ble_disconnected: "Disconnected",
+    ble_connect_btn: "Connect to Caravan",
+    ble_disconnect_btn: "Disconnect",
+    ble_sec_pin: "Bluetooth Security PIN",
+    ble_cur_pin: "Current PIN",
+    ble_new_pin: "New PIN (6 Digits)",
+    ble_new_pin_repeat: "New PIN (Repeat)",
+    ble_chg_btn: "Change PIN",
+    ble_target: "TARGET DEVICE",
+    ble_sec: "SECURITY",
+    ble_telemetry: "TELEMETRY",
+    ble_prompt_hint: "Select 'Karavan_BLE' from the list and tap 'Pair'.",
+    ble_sec_advice: "Security Advice",
+    ble_default_pin_warn: "Default PIN (123456) is active. Please set a custom 6-digit Bluetooth PIN.",
+    ble_btn_save_pin: "Update PIN",
+    ble_btn_remind_later: "Remind Later",
+    ble_pin_mismatch: "New PIN entries do not match!",
+    ble_pin_len_err: "PIN must be at least 4 digits!",
+    ble_pin_success: "Bluetooth PIN updated successfully!",
+    system_settings: "System Settings",
+    language_lbl: "Language / Dil",
+    show_fresh: "Show Fresh Water",
+    show_grey: "Show Grey Water",
+    battery_settings: "Battery Settings",
+    start_calib: "Initial Calibration",
+    current_val: "Current",
+    full_val: "100% Full",
+    empty_val: "0% Empty",
+    manual_val: "Manual",
+    security_alarm: "Alarm Settings",
+    exit_delay: "Exit Delay (sec)",
+    entry_delay: "Entry Delay (sec)",
+    save_settings: "Save Settings",
+    on: "On",
+    off: "Off",
+    timer: "Timer",
+    timer_sub: "Select auto turn-off time",
+    btn_time: "⏱️ Timer",
+    btn_close: "Close",
+    btn_cancel: "Cancel",
+    btn_confirm: "Confirm",
+    min_15: "15 Min",
+    min_30: "30 Min",
+    min_45: "45 Min",
+    min_60: "60 Min",
+    cancel_timer: "Cancel Timer",
+    warning: "Warning",
+    ok: "OK",
+    gas_leak: "GAS LEAK!",
+    gas_leak_sub: "DANGER GAS LEAK!<br>Please ventilate the area!",
+    silence_pin: "SILENCE WITH PIN",
+    disarm_alarm_title: "Disarm Alarm",
+    pin_ph: "PIN",
+    msg_cancel_title: "Canceled",
+    msg_arm_cancel: "Alarm arming canceled.",
+    msg_success: "Success",
+    msg_gas_silent: "Gas alarm silenced.",
+    msg_alarm_off: "Alarm disabled.",
+    msg_timer_cancel: "Timer canceled.",
+    msg_timer_set: "minutes to turn off.",
+    msg_err: "Error",
+    msg_err_pin: "Incorrect PIN!",
+    msg_pump_prot: "Pump Protection",
+    msg_pump_empty: "Cannot start pump, fresh water tank is empty!",
+    msg_sys_off: "System Off",
+    msg_sys_off_desc: "Cannot operate devices while system is off.",
+    solar_states: ["Off", "", "Fault", "Bulk", "Absorption", "Float"],
+    womo_tab_light: "Lighting",
+    womo_tab_energy: "Energy",
+    womo_tab_water: "Water & Tanks",
+    womo_tab_climate: "Climate & Alarm",
+    womo_tab_settings: "Settings",
+    lang_and_theme: "Language & Themes",
+    theme_lbl: "Theme Selection",
+    theme_dark: "Dark",
+    theme_light: "Light",
+    dark_mode: "Dark Mode",
+    light_mode: "Light Mode"
+  },
+  de: {
+    system_status: "SYSTEMSTATUS",
+    system_switch: "Hauptschalter",
+    relay_settings: "Relaissteuerung",
+    pwm_settings: "Dimmer Beleuchtung",
+    battery_card: "Batteriestatus (Junctek)",
+    voltage: "SPANNUNG",
+    current: "STROM",
+    power: "LEISTUNG",
+    battery_cap_left: "RESTKAPAZITÄT",
+    inverter: "Wechselrichter (220V AC)",
+    solar_panel: "Solaranlage (Victron MPPT)",
+    panel_power: "LEISTUNG",
+    panel_volt: "SPANNUNG",
+    chg_current: "LADESTROM",
+    daily_yield: "TAGESERTRAG",
+    tanks: "Tankfüllstände",
+    fresh_water: "Frischwasser",
+    grey_water: "Grauwasser",
+    water_pump: "Wasserpumpe",
+    dry_run_prot: "Trockenlaufschutz Aktiv",
+    environment: "Klima & Umwelt",
+    in_temp: "INNENTEMP",
+    humidity: "FEUCHTE",
+    out_temp: "AUSSENTEMP",
+    security: "Sicherheit & Alarm",
+    arm_alarm: "Scharfschalten",
+    disarm_alarm: "Deaktivieren",
+    ble_conn: "Bluetooth & Sicherheit",
+    ble_modal_title: "Bluetooth-Zentrale",
+    ble_connected: "Verbunden",
+    ble_disconnected: "Getrennt",
+    ble_connect_btn: "Mit Wohnmobil verbinden",
+    ble_disconnect_btn: "Trennen",
+    ble_sec_pin: "Bluetooth-PIN",
+    ble_cur_pin: "Aktuelle PIN",
+    ble_new_pin: "Neue PIN (6 Ziffern)",
+    ble_new_pin_repeat: "Neue PIN (Wiederholen)",
+    ble_chg_btn: "PIN ändern",
+    ble_target: "ZIELGERÄT",
+    ble_sec: "SICHERHEIT",
+    ble_telemetry: "TELEMETRIE",
+    ble_prompt_hint: "Wählen Sie 'Karavan_BLE' und tippen Sie auf 'Koppeln'.",
+    ble_sec_advice: "Sicherheitshinweis",
+    ble_default_pin_warn: "Standard-PIN (123456) ist aktiv. Bitte neue 6-stellige PIN festlegen.",
+    ble_btn_save_pin: "PIN speichern",
+    ble_btn_remind_later: "Später",
+    ble_pin_mismatch: "PINs stimmen nicht überein!",
+    ble_pin_len_err: "Mindestens 4 Ziffern erforderlich!",
+    ble_pin_success: "Bluetooth-PIN aktualisiert!",
+    system_settings: "Systemeinstellungen",
+    language_lbl: "Sprache / Language",
+    show_fresh: "Frischwasser anzeigen",
+    show_grey: "Grauwasser anzeigen",
+    battery_settings: "Batterieeinstellungen",
+    start_calib: "Batterie-Kalibrierung",
+    current_val: "Aktuell",
+    full_val: "100% Voll",
+    empty_val: "0% Leer",
+    manual_val: "Manuell",
+    security_alarm: "Alarmeinstellungen",
+    exit_delay: "Ausgangsverzögerung (s)",
+    entry_delay: "Eingangsverzögerung (s)",
+    save_settings: "Einstellungen speichern",
+    on: "Ein",
+    off: "Aus",
+    timer: "Timer",
+    timer_sub: "Abschaltzeit wählen",
+    btn_time: "⏱️ Zeit",
+    btn_close: "Schließen",
+    btn_cancel: "Abbrechen",
+    btn_confirm: "Bestätigen",
+    min_15: "15 Min",
+    min_30: "30 Min",
+    min_45: "45 Min",
+    min_60: "60 Min",
+    cancel_timer: "Abbrechen",
+    warning: "Warnung",
+    ok: "OK",
+    gas_leak: "GASALARM!",
+    gas_leak_sub: "ACHTUNG GASAUSTRITT!<br>Sofort lüften!",
+    silence_pin: "MIT PIN STUMMSCHALTEN",
+    disarm_alarm_title: "Alarm deaktivieren",
+    pin_ph: "PIN",
+    msg_cancel_title: "Abgebrochen",
+    msg_arm_cancel: "Scharfschalten abgebrochen.",
+    msg_success: "Erfolgreich",
+    msg_gas_silent: "Gasalarm stummgeschaltet.",
+    msg_alarm_off: "Alarm deaktiviert.",
+    msg_timer_cancel: "Timer abgebrochen.",
+    msg_timer_set: "Minuten bis Aus.",
+    msg_err: "Fehler",
+    msg_err_pin: "Falsche PIN!",
+    msg_pump_prot: "Pumpenschutz",
+    msg_pump_empty: "Pumpe blockiert, Wassertank ist leer!",
+    msg_sys_off: "System Aus",
+    msg_sys_off_desc: "Geräte blockiert, System ist aus.",
+    solar_states: ["Aus", "", "Fehler", "Bulk", "Absorption", "Float"],
+    womo_tab_light: "Licht",
+    womo_tab_energy: "Energie",
+    womo_tab_water: "Wasser",
+    womo_tab_climate: "Klima",
+    womo_tab_settings: "System",
+    lang_and_theme: "Sprache & Themen",
+    theme_lbl: "Themenauswahl",
+    theme_dark: "Dunkel",
+    theme_light: "Hell",
+    dark_mode: "Dunkler Modus",
+    light_mode: "Heller Modus"
+  },
+  es: {
+    system_status: "ESTADO SISTEMA",
+    system_switch: "Interruptor Maestro",
+    relay_settings: "Control de Relés",
+    pwm_settings: "Atenuadores LED",
+    battery_card: "Batería (Junctek)",
+    voltage: "VOLTAJE",
+    current: "CORRIENTE",
+    power: "CONSUMO",
+    battery_cap_left: "CAPACIDAD",
+    inverter: "Inversor (220V AC)",
+    solar_panel: "Panel Solar (Victron MPPT)",
+    panel_power: "POTENCIA",
+    panel_volt: "VOLTAJE",
+    chg_current: "CORRIENTE",
+    daily_yield: "PROD. DIARIA",
+    tanks: "Niveles de Depósitos",
+    fresh_water: "Agua Limpia",
+    grey_water: "Aguas Grises",
+    water_pump: "Bomba de Agua",
+    dry_run_prot: "Protección en Seco Activa",
+    environment: "Clima y Ambiente",
+    in_temp: "TEMP INT",
+    humidity: "HUMEDAD",
+    out_temp: "TEMP EXT",
+    security: "Seguridad y Alarma",
+    arm_alarm: "Armar Alarma",
+    disarm_alarm: "Desarmar Alarma",
+    ble_conn: "Bluetooth y Seguridad",
+    ble_modal_title: "Centro Bluetooth",
+    ble_connected: "Conectado",
+    ble_disconnected: "Desconectado",
+    ble_connect_btn: "Conectar",
+    ble_disconnect_btn: "Desconectar",
+    ble_sec_pin: "PIN de Seguridad Bluetooth",
+    ble_cur_pin: "PIN Actual",
+    ble_new_pin: "Nuevo PIN",
+    ble_new_pin_repeat: "Nuevo PIN (Repetir)",
+    ble_chg_btn: "Cambiar PIN",
+    ble_target: "DISPOSITIVO",
+    ble_sec: "SEGURIDAD",
+    ble_telemetry: "TELEMETRÍA",
+    ble_prompt_hint: "Seleccione 'Karavan_BLE' y pulse 'Vincular'.",
+    ble_sec_advice: "Consejo de Seguridad",
+    ble_default_pin_warn: "PIN predeterminado (123456) activo. Establezca nuevo PIN de 6 dígitos.",
+    ble_btn_save_pin: "Guardar PIN",
+    ble_btn_remind_later: "Más tarde",
+    ble_pin_mismatch: "Los PIN no coinciden!",
+    ble_pin_len_err: "Mínimo 4 dígitos!",
+    ble_pin_success: "PIN Bluetooth actualizado!",
+    system_settings: "Ajustes Sistema",
+    language_lbl: "Idioma / Language",
+    show_fresh: "Mostrar Agua Limpia",
+    show_grey: "Mostrar Aguas Grises",
+    battery_settings: "Ajustes Batería",
+    start_calib: "Calibración Batería",
+    current_val: "Actual",
+    full_val: "100% Lleno",
+    empty_val: "0% Vacío",
+    manual_val: "Manual",
+    security_alarm: "Ajustes Alarma",
+    exit_delay: "Retardo Salida (s)",
+    entry_delay: "Retardo Entrada (s)",
+    save_settings: "Guardar Ajustes",
+    on: "Encendido",
+    off: "Apagado",
+    timer: "Temporizador",
+    timer_sub: "Tiempo de apagado automático",
+    btn_time: "⏱️ Tiempo",
+    btn_close: "Cerrar",
+    btn_cancel: "Cancelar",
+    btn_confirm: "Confirmar",
+    min_15: "15 Min",
+    min_30: "30 Min",
+    min_45: "45 Min",
+    min_60: "60 Min",
+    cancel_timer: "Cancelar",
+    warning: "Aviso",
+    ok: "Aceptar",
+    gas_leak: "FUGA DE GAS!",
+    gas_leak_sub: "PELIGRO FUGA DE GAS!<br>Ventile el área!",
+    silence_pin: "SILENCIAR CON PIN",
+    disarm_alarm_title: "Desarmar Alarma",
+    pin_ph: "PIN",
+    msg_cancel_title: "Cancelado",
+    msg_arm_cancel: "Armado cancelado.",
+    msg_success: "Éxito",
+    msg_gas_silent: "Alarma silenciada.",
+    msg_alarm_off: "Alarma desactivada.",
+    msg_timer_cancel: "Temporizador cancelado.",
+    msg_timer_set: "minutos para apagar.",
+    msg_err: "Error",
+    msg_err_pin: "PIN incorrecto!",
+    msg_pump_prot: "Prot. Bomba",
+    msg_pump_empty: "Bomba bloqueada, depósito vacío!",
+    msg_sys_off: "Sistema Apagado",
+    msg_sys_off_desc: "Sistema apagado.",
+    solar_states: ["Apagado", "", "Fallo", "Bulk", "Absorción", "Flotación"],
+    womo_tab_light: "Luces",
+    womo_tab_energy: "Energía",
+    womo_tab_water: "Agua",
+    womo_tab_climate: "Clima",
+    womo_tab_settings: "Ajustes",
+    lang_and_theme: "Idioma y Temas",
+    theme_lbl: "Selección de Tema",
+    theme_dark: "Oscuro",
+    theme_light: "Claro",
+    dark_mode: "Modo Oscuro",
+    light_mode: "Modo Claro"
+  },
+  it: {
+    system_status: "STATO SISTEMA",
+    system_switch: "Interruttore Principale",
+    relay_settings: "Controllo Relè",
+    pwm_settings: "Dimmer Illuminazione",
+    battery_card: "Batteria (Junctek)",
+    voltage: "VOLTAGGIO",
+    current: "CORRENTE",
+    power: "POTENZA",
+    battery_cap_left: "CAPACITÀ",
+    inverter: "Inverter (220V AC)",
+    solar_panel: "Pannello Solare (Victron MPPT)",
+    panel_power: "POTENZA",
+    panel_volt: "VOLTAGGIO",
+    chg_current: "CORRENTE",
+    daily_yield: "PROD. GIORN.",
+    tanks: "Livelli Serbatoi",
+    fresh_water: "Acqua Chiara",
+    grey_water: "Acqua Grigia",
+    water_pump: "Pompa Acqua",
+    dry_run_prot: "Protezione a Secco Attiva",
+    environment: "Clima e Ambiente",
+    in_temp: "TEMP INT",
+    humidity: "UMIDITÀ",
+    out_temp: "TEMP EST",
+    security: "Sicurezza e Allarme",
+    arm_alarm: "Inserisci Allarme",
+    disarm_alarm: "Disattiva Allarme",
+    ble_conn: "Bluetooth e Sicurezza",
+    ble_modal_title: "Centro Bluetooth",
+    ble_connected: "Connesso",
+    ble_disconnected: "Disconnesso",
+    ble_connect_btn: "Connetti",
+    ble_disconnect_btn: "Disconnetti",
+    ble_sec_pin: "PIN di Sicurezza",
+    ble_cur_pin: "PIN Attuale",
+    ble_new_pin: "Nuovo PIN",
+    ble_new_pin_repeat: "Nuovo PIN (Ripeti)",
+    ble_chg_btn: "Cambia PIN",
+    ble_target: "DISPOSITIVO",
+    ble_sec: "SICUREZZA",
+    ble_telemetry: "TELEMETRIA",
+    ble_prompt_hint: "Seleziona 'Karavan_BLE' e tocca 'Accoppia'.",
+    ble_sec_advice: "Consiglio di Sicurezza",
+    ble_default_pin_warn: "PIN predefinito (123456) attivo. Imposta nuovo PIN a 6 cifre.",
+    ble_btn_save_pin: "Salva PIN",
+    ble_btn_remind_later: "Più tardi",
+    ble_pin_mismatch: "I PIN non corrispondono!",
+    ble_pin_len_err: "Almeno 4 cifre richieste!",
+    ble_pin_success: "PIN Bluetooth aggiornato!",
+    system_settings: "Impostazioni Sistema",
+    language_lbl: "Lingua / Language",
+    show_fresh: "Mostra Acqua Chiara",
+    show_grey: "Mostra Acqua Grigia",
+    battery_settings: "Impostazioni Batteria",
+    start_calib: "Calibrazione Batteria",
+    current_val: "Attuale",
+    full_val: "100% Pieno",
+    empty_val: "0% Vuoto",
+    manual_val: "Manuale",
+    security_alarm: "Impostazioni Allarme",
+    exit_delay: "Ritardo Uscita (s)",
+    entry_delay: "Ritardo Entrata (s)",
+    save_settings: "Salva Impostazioni",
+    on: "Acceso",
+    off: "Spento",
+    timer: "Timer",
+    timer_sub: "Tempo spegnimento automatico",
+    btn_time: "⏱️ Timer",
+    btn_close: "Chiudi",
+    btn_cancel: "Annulla",
+    btn_confirm: "Conferma",
+    min_15: "15 Min",
+    min_30: "30 Min",
+    min_45: "45 Min",
+    min_60: "60 Min",
+    cancel_timer: "Annulla",
+    warning: "Avviso",
+    ok: "OK",
+    gas_leak: "FUGA DI GAS!",
+    gas_leak_sub: "PERICOLO FUGA DI GAS!<br>Arieggiare!",
+    silence_pin: "SILENZIA CON PIN",
+    disarm_alarm_title: "Disattiva Allarme",
+    pin_ph: "PIN",
+    msg_cancel_title: "Annullato",
+    msg_arm_cancel: "Inserimento annullato.",
+    msg_success: "Successo",
+    msg_gas_silent: "Allarme silenziato.",
+    msg_alarm_off: "Allarme disattivato.",
+    msg_timer_cancel: "Timer annullato.",
+    msg_timer_set: "minuti allo spegnimento.",
+    msg_err: "Errore",
+    msg_err_pin: "PIN errato!",
+    msg_pump_prot: "Protezione Pompa",
+    msg_pump_empty: "Pompa bloccata, serbatoio vuoto!",
+    msg_sys_off: "Sistema Spento",
+    msg_sys_off_desc: "Sistema spento.",
+    solar_states: ["Spento", "", "Guasto", "Bulk", "Assorbimento", "Float"],
+    womo_tab_light: "Luci",
+    womo_tab_energy: "Energia",
+    womo_tab_water: "Acqua",
+    womo_tab_climate: "Clima",
+    womo_tab_settings: "Sistema",
+    lang_and_theme: "Lingua e Temi",
+    theme_lbl: "Selezione Tema",
+    theme_dark: "Scuro",
+    theme_light: "Chiaro",
+    dark_mode: "Modalità Scura",
+    light_mode: "Modalità Chiara"
+  }
+};
+
+var currentLang = localStorage.getItem('karavan_lang') || 'tr';
+var isSystemOn = false;
+var relayBusy = {};
+var currentTimerId = '';
+var rT, isRLP = false;
+var gAlarmState = 0;
+var gAlarmSure = 0;
+var lastStatusData = null;
+
+var defaultRelayNames = [
+  "Su Pompası",
+  "İnvertör",
+  "Tavan & Salon",
+  "Yatak Odası",
+  "WC & Banyo",
+  "Dış Tente Işığı",
+  "Buzdolabı & 12V"
+];
+
+var lastConfigData = {
+  rEn: [true,true,true,true,true,true,true],
+  rNm: defaultRelayNames.slice(),
+  pEn: [true,true,true,true],
+  pNm: ["Tavan LED","Mutfak LED","Yatak LED","Ortam Işık"],
+  st: true, sg: true, hk: true, pt: "4_level",
+  atip: "lifepo4", akap: 100,
+  alPass: "1234", alCikis: 30, alGiris: 30,
+  lang: "tr", gMod: true
+};
+
+// ==========================================
+// SEKME GEÇİŞİ (TAB SWITCHER)
+// ==========================================
+function switchWomoTab(tabId) {
+  document.querySelectorAll('.womo-page').forEach(function(el){
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.womo-tab').forEach(function(el){
+    el.classList.remove('active');
+  });
+  var target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+  var btnId = 'tabBtn-' + tabId.replace('tab-', '');
+  var btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
+// DİL UYGULAMA (I18N)
+// ==========================================
+function applyLanguage(lang) {
+  if (!I18N[lang]) lang = 'tr';
+  currentLang = lang;
+  localStorage.setItem('karavan_lang', lang);
+
+  var dict = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-ph');
+    if (dict[key]) el.setAttribute('placeholder', dict[key]);
+  });
+
+  var sysDilInput = document.getElementById('sys_dil');
+  if (sysDilInput) sysDilInput.value = lang;
+
+  updateThemeButtonsUI(document.body.classList.contains('light-mode') ? 'light' : 'dark');
+  updateAlarmUI(gAlarmState, gAlarmSure);
+  if (lastStatusData) paintStatus(lastStatusData);
+}
+
+function changeLanguage(code) {
+  applyLanguage(code);
+  sendBleCommand('set_cfg:lang=' + code);
+}
+
+// ==========================================
+// TEMA SİSTEMİ (AYDINLIK / KARANLIK MOD)
+// ==========================================
+function setAppTheme(theme) {
+  var isDark = (theme === 'dark');
+  if (isDark) {
+    document.body.classList.remove('light-mode');
+    var metaTh = document.querySelector('meta[name="theme-color"]');
+    if (metaTh) metaTh.setAttribute('content', '#080B15');
+  } else {
+    document.body.classList.add('light-mode');
+    var metaTh = document.querySelector('meta[name="theme-color"]');
+    if (metaTh) metaTh.setAttribute('content', '#F0F2F5');
+  }
+  try {
+    localStorage.setItem('karavan_theme', theme);
+  } catch(e){}
+  updateThemeButtonsUI(theme);
+}
+
+function updateThemeButtonsUI(theme) {
+  var isDark = (theme === 'dark');
+  var bDark = document.getElementById('btn_theme_dark');
+  var bLight = document.getElementById('btn_theme_light');
+  var lblTheme = document.getElementById('lbl_current_theme');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  if (bDark && bLight) {
+    if (isDark) {
+      bDark.style.background = 'var(--accent-magenta)';
+      bDark.style.color = '#FFFFFF';
+      bDark.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
+      bLight.style.background = 'transparent';
+      bLight.style.color = 'var(--text-muted)';
+      bLight.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
+      if (lblTheme) lblTheme.innerText = dict.dark_mode || 'Karanlık Mod';
+    } else {
+      bLight.style.background = 'var(--accent-magenta)';
+      bLight.style.color = '#FFFFFF';
+      bLight.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
+      bDark.style.background = 'transparent';
+      bDark.style.color = 'var(--text-muted)';
+      bDark.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
+      if (lblTheme) lblTheme.innerText = dict.light_mode || 'Aydınlık Mod';
+    }
+  }
+}
+
+// ==========================================
+// SES VE UYARI SİSTEMİ
+// ==========================================
+var audioCtx = null;
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+window.addEventListener('click', initAudio, {once:true});
+window.addEventListener('touchstart', initAudio, {once:true});
+
+function playTone(freq, type, dur) {
+  if(!audioCtx) return;
+  try {
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + dur);
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e){}
+}
+
+function showA(t, m, isSuccess){
+  document.getElementById('alertTitle').innerText = t;
+  document.getElementById('alertMsg').innerText = m;
+  var c = document.getElementById('alertIcon');
+  if(isSuccess){
+    c.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+    document.getElementById('alertTitle').style.color = '#22c55e';
+  } else {
+    c.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
+    document.getElementById('alertTitle').style.color = 'var(--text-primary)';
+  }
+  document.getElementById('alert-modal').style.display = 'flex';
+}
+
+// ==========================================
+// BLUETOOTH (WEB BLE) İLETİŞİM MOTORU
+// ==========================================
+var UART_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+var UART_RX_UUID      = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+var UART_TX_UUID      = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+var bleDevice = null;
+var bleServer = null;
+var rxCharacteristic = null;
+var txCharacteristic = null;
+var bleIncomingBuffer = '';
+var isBleConnected = false;
+var isBleAuthenticated = false;
+var bleWriteQueue = [];
+var isBleWriting = false;
+var isPinModalFirstTime = false;
+var isDryRunProtectionOn = true;
+var currentTemizSuYuzde = 0;
+
+function openBleModal() {
+  updateBleModalUI();
+  document.getElementById('ble-modal').style.display = 'flex';
+}
+
+function updateBleModalUI() {
+  var badge = document.getElementById('bleModalBadge');
+  var dot = document.getElementById('bleModalDot');
+  var stText = document.getElementById('bleModalStatusText');
+  var core = document.getElementById('radarCore');
+  var ring1 = document.getElementById('radarRing1');
+  var ring2 = document.getElementById('radarRing2');
+  var secSt = document.getElementById('bleModalSecStatus');
+  var telemSt = document.getElementById('bleModalTelemStatus');
+  var actions = document.getElementById('bleModalActions');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  if (!badge || !actions) return;
+
+  if (isBleConnected) {
+    badge.className = 'ble-stat-badge connected';
+    dot.className = 'ble-dot connected';
+    stText.innerText = dict.ble_connected;
+    core.className = 'radar-core connected';
+    ring1.className = 'radar-ring pulse';
+    ring2.className = 'radar-ring pulse';
+    secSt.innerText = isBleAuthenticated ? "🔒 PIN Doğrulandı" : "⚠️ PIN Bekleniyor";
+    secSt.style.color = isBleAuthenticated ? "#22c55e" : "#f59e0b";
+    telemSt.innerText = "Canlı Akış (1 Hz)";
+    telemSt.style.color = "#22c55e";
+
+    actions.innerHTML = '<div style="display:flex; flex-direction:column; gap:10px;">' +
+      '<button type="button" onclick="openBlePinModal(false)" class="womo-btn-action">🔑 ' + dict.ble_chg_btn + '</button>' +
+      '<button type="button" onclick="disconnectBle(); document.getElementById(\'ble-modal\').style.display=\'none\';" class="womo-btn-action" style="background:rgba(239,68,68,0.15); color:#ef4444; border-color:rgba(239,68,68,0.3);">🔌 ' + dict.ble_disconnect_btn + '</button>' +
+    '</div>';
+  } else {
+    badge.className = 'ble-stat-badge disconnected';
+    dot.className = 'ble-dot';
+    stText.innerText = dict.ble_disconnected;
+    core.className = 'radar-core';
+    ring1.className = 'radar-ring';
+    ring2.className = 'radar-ring';
+    secSt.innerText = "6 Haneli PIN";
+    secSt.style.color = "var(--text-primary)";
+    telemSt.innerText = "Hazır";
+    telemSt.style.color = "var(--text-primary)";
+
+    actions.innerHTML = '<button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action" style="background:var(--accent-magenta);">' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>' +
+      '<span>' + dict.ble_connect_btn + '</span>' +
+    '</button>' +
+    '<p id="bleModalPromptHelp" style="font-size:11px; color:var(--text-muted); margin-top:10px; margin-bottom:0;">' + dict.ble_prompt_hint + '</p>';
+  }
+}
+
+async function startBleFromModal() {
+  var badge = document.getElementById('bleModalBadge');
+  var stText = document.getElementById('bleModalStatusText');
+  var core = document.getElementById('radarCore');
+  var ring1 = document.getElementById('radarRing1');
+  var ring2 = document.getElementById('radarRing2');
+
+  if (badge) badge.className = 'ble-stat-badge scanning';
+  if (stText) stText.innerText = "Aranıyor...";
+  if (core) core.className = 'radar-core scanning';
+  if (ring1) ring1.className = 'radar-ring pulse';
+  if (ring2) ring2.className = 'radar-ring pulse';
+
+  await connectBle();
+  updateBleModalUI();
+}
+
+function updateBleUI(connected, customText) {
+  var dot = document.getElementById('bleDot');
+  var pillText = document.getElementById('blePillText');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  if (connected) {
+    if (dot) dot.classList.add('connected');
+    if (pillText) pillText.innerText = "BLE OK";
+  } else {
+    if (dot) dot.classList.remove('connected');
+    if (pillText) pillText.innerText = customText || "BLE";
+  }
+  updateBleModalUI();
+}
+
+var isAutoConnecting = false;
+
+async function connectBleDevice(dev) {
+  if (!dev || !dev.gatt) return false;
+  try {
+    updateBleUI(false, "Bağlanıyor...");
+    bleDevice = dev;
+    bleDevice.removeEventListener('gattserverdisconnected', onBleDisconnected);
+    bleDevice.addEventListener('gattserverdisconnected', onBleDisconnected);
+    bleServer = await bleDevice.gatt.connect();
+    var service = await bleServer.getPrimaryService(UART_SERVICE_UUID);
+    rxCharacteristic = await service.getCharacteristic(UART_RX_UUID);
+    txCharacteristic = await service.getCharacteristic(UART_TX_UUID);
+
+    await txCharacteristic.startNotifications();
+    txCharacteristic.removeEventListener('characteristicvaluechanged', handleBleNotification);
+    txCharacteristic.addEventListener('characteristicvaluechanged', handleBleNotification);
+
+    isBleConnected = true;
+    updateBleUI(true);
+    localStorage.setItem('karavan_ble_paired', '1');
+
+    var pin = localStorage.getItem('karavan_ble_pin') || '123456';
+    sendBleCommand('auth:' + pin);
+    return true;
+  } catch (e) {
+    console.warn("connectBleDevice hatası:", e);
+    updateBleUI(false);
+    return false;
+  }
+}
+
+async function autoConnectIfPaired() {
+  if (isBleConnected || isAutoConnecting) return;
+  if (!navigator.bluetooth || !navigator.bluetooth.getDevices) return;
+  if (localStorage.getItem('karavan_ble_paired') !== '1') return;
+
+  try {
+    isAutoConnecting = true;
+    var devices = await navigator.bluetooth.getDevices();
+    if (devices && devices.length > 0) {
+      var karavanDev = null;
+      for (var d = 0; d < devices.length; d++) {
+        if (devices[d].name && devices[d].name.indexOf('Karavan') !== -1) {
+          karavanDev = devices[d];
+          break;
+        }
+      }
+      if (!karavanDev) karavanDev = devices[0];
+      if (karavanDev) {
+        console.log("Kayıtlı BLE cihaz bulundu, otomatik bağlanılıyor:", karavanDev.name);
+        await connectBleDevice(karavanDev);
+      }
+    }
+  } catch (err) {
+    console.log("autoConnectIfPaired hatası:", err);
+  } finally {
+    isAutoConnecting = false;
+  }
+}
+
+async function connectBle(forcePrompt) {
+  if (!navigator.bluetooth) {
+    showA(I18N[currentLang].msg_err, "Tarayıcınız Web Bluetooth desteklemiyor. Lütfen Android Chrome veya Edge kullanın.", false);
+    return;
+  }
+  try {
+    updateBleUI(false, "Bağlanıyor...");
+    
+    // Eğer daha önce eşleşilmişse ve kullanıcı zorla yeni arama istememişse doğrudan getDevices() ile bağlan
+    if (!forcePrompt && navigator.bluetooth.getDevices) {
+      try {
+        var devices = await navigator.bluetooth.getDevices();
+        if (devices && devices.length > 0) {
+          var karavanDev = null;
+          for (var d = 0; d < devices.length; d++) {
+            if (devices[d].name && devices[d].name.indexOf('Karavan') !== -1) {
+              karavanDev = devices[d];
+              break;
+            }
+          }
+          if (!karavanDev) karavanDev = devices[0];
+          if (karavanDev) {
+            var ok = await connectBleDevice(karavanDev);
+            if (ok) return;
+          }
+        }
+      } catch (getDevErr) {
+        console.log("getDevices fallback:", getDevErr);
+      }
+    }
+
+    var selectedDev = null;
+    try {
+      selectedDev = await navigator.bluetooth.requestDevice({
+        filters: [{ namePrefix: 'Karavan' }],
+        optionalServices: [UART_SERVICE_UUID]
+      });
+    } catch (filterErr) {
+      if (filterErr.name === 'NotFoundError' || (filterErr.message && filterErr.message.indexOf('User cancelled') === -1)) {
+        selectedDev = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [UART_SERVICE_UUID]
+        });
+      } else {
+        throw filterErr;
+      }
+    }
+
+    if (selectedDev) {
+      await connectBleDevice(selectedDev);
+    }
+  } catch (err) {
+    console.warn("BLE Bağlantı hatası:", err);
+    updateBleUI(false);
+  }
+}
+
+function disconnectBle() {
+  localStorage.removeItem('karavan_ble_paired');
+  if (bleDevice && bleDevice.gatt.connected) {
+    bleDevice.gatt.disconnect();
+  }
+  onBleDisconnected();
+}
+
+var isAutoReconnecting = false;
+async function onBleDisconnected() {
+  isBleConnected = false;
+  isBleAuthenticated = false;
+  rxCharacteristic = null;
+  txCharacteristic = null;
+  bleWriteQueue = [];
+  isBleWriting = false;
+  updateBleUI(false, "Koptu");
+
+  if (bleDevice && !isAutoReconnecting) {
+    isAutoReconnecting = true;
+    for (var attempt = 1; attempt <= 3; attempt++) {
+      if (isBleConnected) break;
+      await new Promise(function(r){ setTimeout(r, 1500); });
+      try {
+        updateBleUI(false, "Bağlanıyor...");
+        bleServer = await bleDevice.gatt.connect();
+        var service = await bleServer.getPrimaryService(UART_SERVICE_UUID);
+        rxCharacteristic = await service.getCharacteristic(UART_RX_UUID);
+        txCharacteristic = await service.getCharacteristic(UART_TX_UUID);
+        await txCharacteristic.startNotifications();
+        txCharacteristic.addEventListener('characteristicvaluechanged', handleBleNotification);
+
+        isBleConnected = true;
+        updateBleUI(true);
+        var pin = localStorage.getItem('karavan_ble_pin') || '123456';
+        sendBleCommand('auth:' + pin);
+        break;
+      } catch(err) {
+        console.warn("Otomatik yeniden bağlanma denemesi başarısız:", err);
+      }
+    }
+    isAutoReconnecting = false;
+    if (!isBleConnected) updateBleUI(false);
+  }
+}
+
+function sendBleCommand(cmdStr) {
+  if (!isBleConnected || !rxCharacteristic) return;
+  bleWriteQueue.push(cmdStr + "\n");
+  processBleQueue();
+}
+
+async function processBleQueue() {
+  if (isBleWriting || bleWriteQueue.length === 0 || !rxCharacteristic) return;
+  isBleWriting = true;
+  var msg = bleWriteQueue.shift();
+  try {
+    var encoder = new TextEncoder();
+    var data = encoder.encode(msg);
+    var chunkSize = 40;
+    for (var offset = 0; offset < data.length; offset += chunkSize) {
+      if (!isBleConnected || !rxCharacteristic) break;
+      var chunk = data.slice(offset, offset + chunkSize);
+      try {
+        if (rxCharacteristic.properties && rxCharacteristic.properties.writeWithoutResponse) {
+          await rxCharacteristic.writeValueWithoutResponse(chunk);
+        } else {
+          await rxCharacteristic.writeValue(chunk);
+        }
+      } catch (innerErr) {
+        await rxCharacteristic.writeValue(chunk);
+      }
+      if (offset + chunkSize < data.length) {
+        await new Promise(function(r){ setTimeout(r, 10); });
+      }
+    }
+  } catch(e) {
+    console.warn("BLE Yazma Hatası:", e);
+  } finally {
+    isBleWriting = false;
+    if (bleWriteQueue.length > 0 && isBleConnected) {
+      setTimeout(processBleQueue, 10);
+    }
+  }
+}
+
+var bleTextDecoder = new TextDecoder('utf-8');
+
+function safeDecodeName(str) {
+  if (!str) return "";
+  try {
+    return decodeURIComponent(str);
+  } catch(e) {
+    return str;
+  }
+}
+
+function handleBleNotification(event) {
+  var text = bleTextDecoder.decode(event.target.value, { stream: true });
+  bleIncomingBuffer += text;
+
+  var newlineIndex;
+  while ((newlineIndex = bleIncomingBuffer.indexOf('\n')) !== -1) {
+    var line = bleIncomingBuffer.substring(0, newlineIndex).trim();
+    bleIncomingBuffer = bleIncomingBuffer.substring(newlineIndex + 1);
+    if (line.length > 0) parseBleMessage(line);
+  }
+}
+
+function parseBleMessage(msg) {
+  try {
+    var data = JSON.parse(msg);
+    var dict = I18N[currentLang] || I18N.tr;
+
+    if (data.type === 'auth_ok' || (data.type === 'auth' && data.status === 'ok')) {
+      isBleAuthenticated = true;
+      updateBleUI(true);
+      var currentStoredPin = localStorage.getItem('karavan_ble_pin') || '123456';
+      if (data.firstTime || currentStoredPin === '123456') {
+        setTimeout(function() { openBlePinModal(true); }, 700);
+      }
+    } else if (data.type === 'auth_fail' || (data.type === 'auth' && data.status !== 'ok')) {
+      isBleAuthenticated = false;
+      updateBleUI(true);
+      showA(dict.msg_err, "Bluetooth PIN şifresi hatalı!", false);
+      setTimeout(function() {
+        var p = prompt("Bluetooth PIN kodunuzu girin:", "123456");
+        if (p) {
+          localStorage.setItem('karavan_ble_pin', p);
+          sendBleCommand('auth:' + p);
+        }
+      }, 500);
+    } else if (data.type === 'pin_ok' || (data.type === 'pin_result' && data.status === 'ok')) {
+      var pend = localStorage.getItem('temp_pending_pin');
+      if (pend) {
+        localStorage.setItem('karavan_ble_pin', pend);
+        localStorage.removeItem('temp_pending_pin');
+      }
+      var pModal = document.getElementById('ble-pin-modal');
+      if (pModal) pModal.style.display = 'none';
+      showA(dict.msg_success, dict.ble_pin_success || "Bluetooth PIN başarıyla güncellendi!", true);
+      updateBleModalUI();
+    } else if (data.type === 'pin_err' || (data.type === 'pin_result' && data.status !== 'ok')) {
+      showA(dict.msg_err, "Mevcut PIN hatalı veya yeni PIN geçersiz!", false);
+    } else if (data.type === 'cfg') {
+      if (data.rNm && Array.isArray(data.rNm)) {
+        data.rNm = data.rNm.map(safeDecodeName);
+      }
+      if (data.pNm && Array.isArray(data.pNm)) {
+        data.pNm = data.pNm.map(safeDecodeName);
+      }
+      lastConfigData = data;
+      localStorage.setItem('karavan_config', JSON.stringify(data));
+      applyConfigToUI(data);
+    } else if (data.type === 'cfg_saved') {
+      showA(dict.msg_success, dict.save_settings + " - " + dict.msg_success, true);
+    } else if (data.r !== undefined || data.sistem !== undefined) {
+      lastStatusData = data;
+      paintStatus(data);
+    }
+  } catch(e) {
+    console.warn("JSON Parse Hatası:", e, msg);
+  }
+}
+
+function openBlePinModal(isFirstTime) {
+  isPinModalFirstTime = isFirstTime;
+  var oldRow = document.getElementById('oldPinRow');
+  var title = document.getElementById('blePinModalTitle');
+  var desc = document.getElementById('blePinModalDesc');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  document.getElementById('modalNewPin').value = '';
+  document.getElementById('modalNewPin2').value = '';
+  document.getElementById('modalOldPin').value = '';
+
+  if (isFirstTime) {
+    if (oldRow) oldRow.style.display = 'none';
+    if (title) title.innerText = dict.ble_sec_advice;
+    if (desc) desc.innerText = dict.ble_default_pin_warn;
+  } else {
+    if (oldRow) oldRow.style.display = 'block';
+    if (title) title.innerText = dict.ble_chg_btn;
+    if (desc) desc.innerText = "Lütfen mevcut PIN kodunuzu ve yeni 6 haneli şifrenizi girin.";
+  }
+  document.getElementById('ble-pin-modal').style.display = 'flex';
+}
+
+function submitBlePinChange() {
+  var dict = I18N[currentLang] || I18N.tr;
+  var oldPin = isPinModalFirstTime ? (localStorage.getItem('karavan_ble_pin') || '123456') : document.getElementById('modalOldPin').value.trim();
+  var newPin = document.getElementById('modalNewPin').value.trim();
+  var newPin2 = document.getElementById('modalNewPin2').value.trim();
+
+  if (!isPinModalFirstTime && (!oldPin || oldPin.length < 4)) {
+    showA(dict.msg_err, "Lütfen mevcut şifrenizi girin.", false);
+    return;
+  }
+  if (!newPin || newPin.length < 4) {
+    showA(dict.msg_err, dict.ble_pin_len_err, false);
+    return;
+  }
+  if (newPin !== newPin2) {
+    showA(dict.msg_err, dict.ble_pin_mismatch, false);
+    return;
+  }
+
+  localStorage.setItem('temp_pending_pin', newPin);
+  sendBleCommand('change_pin:' + oldPin + ':' + newPin);
+}
+
+function degistirBlePin() {
+  var dict = I18N[currentLang] || I18N.tr;
+  var oldPin = document.getElementById('inputOldBlePin').value.trim();
+  var newPin = document.getElementById('inputNewBlePin').value.trim();
+  if (!oldPin || !newPin || newPin.length < 4) {
+    showA(dict.msg_err, "Lütfen en az 4 haneli yeni şifre girin.", false);
+    return;
+  }
+  localStorage.setItem('temp_pending_pin', newPin);
+  sendBleCommand('change_pin:' + oldPin + ':' + newPin);
+}
+
+// ==========================================
+// ARAYÜZ BOYAMA VE VERİ GÜNCELLEME (STATUS)
+// ==========================================
+function paintStatus(res) {
+  // 1. Ana Sistem Şalteri
+  var isSys = (res.sistem === 'on' || res.sistem === true || res.sistem === 1);
+  isSystemOn = isSys;
+  var btnSys = document.getElementById('card_sistem');
+  var txtSys = document.getElementById('st_sistem_text');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  if (btnSys) {
+    if (isSys) {
+      btnSys.classList.add('active-magenta');
+      if (txtSys) txtSys.innerText = dict.on;
+    } else {
+      btnSys.classList.remove('active-magenta');
+      if (txtSys) txtSys.innerText = dict.off;
+    }
+  }
+
+  // 2. Röleler (r0 - r6)
+  if (res.r) {
+    for (var i = 0; i < 7; i++) {
+      var tile = document.getElementById('card_r' + i);
+      var stEl = document.getElementById('st_r' + i);
+      if (tile) {
+        var on = (res.r[i] == 1);
+        if (on) tile.classList.add('active');
+        else tile.classList.remove('active');
+        if (stEl) {
+          var rtStr = (res.rt && res.rt[i] > 0) ? ' (' + res.rt[i] + 'm)' : '';
+          stEl.innerText = (on ? dict.on : dict.off) + rtStr;
+        }
+      }
+    }
+  }
+
+  // İnvertör Özel Durum Butonu (r1 - Fiziki Röle 2)
+  var invBtn = document.getElementById('btn_inverter');
+  var invTxt = document.getElementById('st_inverter_btn');
+  if (invBtn && res.r) {
+    var invOn = (res.r[1] == 1);
+    if (invOn) {
+      invBtn.classList.add('active-magenta');
+      if (invTxt) invTxt.innerText = "İnvertör Açık (220V Aktif)";
+    } else {
+      invBtn.classList.remove('active-magenta');
+      if (invTxt) invTxt.innerText = "İnvertör Kapalı";
+    }
+  }
+
+  // Su Pompası Özel Durum Butonu (r0 - Fiziki Röle 1)
+  var pumpBtn = document.getElementById('btn_pump');
+  var pumpTxt = document.getElementById('st_pump_btn');
+  if (pumpBtn && res.r) {
+    var pumpOn = (res.r[0] == 1);
+    if (pumpOn) {
+      pumpBtn.classList.remove('active-blue');
+      pumpBtn.classList.add('active-magenta');
+      if (pumpTxt) pumpTxt.innerText = "Su Pompası Açık (Aktif)";
+    } else {
+      pumpBtn.classList.remove('active-magenta');
+      pumpBtn.classList.remove('active-blue');
+      if (pumpTxt) pumpTxt.innerText = "Su Pompası Kapalı";
+    }
+  }
+
+  // 3. Dimmerlar (p0 - p3)
+  if (res.p) {
+    for (var i = 0; i < 4; i++) {
+      var val = res.p[i];
+      var rng = document.getElementById('range_p' + i);
+      var perc = document.getElementById('st_p' + i);
+      if (rng && document.activeElement !== rng) {
+        rng.value = val;
+      }
+      if (perc) {
+        var ptStr = (res.pt && res.pt[i] > 0) ? ' (' + res.pt[i] + 'm)' : '';
+        perc.innerText = '%' + val + ptStr;
+        if (val > 0) perc.classList.add('active');
+        else perc.classList.remove('active');
+      }
+    }
+  }
+
+  // 4. Akü (Junctek)
+  if (res.aku_v !== undefined || res.aku_y !== undefined) {
+    var bY = parseFloat(res.aku_y !== undefined ? res.aku_y : (res.ayuzde !== undefined ? res.ayuzde : 0)) || 0;
+    var bCirc = document.getElementById('bat-circle');
+    var bText = document.getElementById('bat-perc');
+    if (bText) {
+      bText.textContent = '%' + Math.round(bY);
+      try { bText.innerText = '%' + Math.round(bY); } catch(e){}
+    }
+    if (bCirc) {
+      var dashoffset = 339.29 * (1 - (bY / 100));
+      bCirc.setAttribute('stroke-dashoffset', dashoffset);
+      if (bY > 50) bCirc.setAttribute('stroke', '#C026D3');
+      else if (bY > 20) bCirc.setAttribute('stroke', '#f59e0b');
+      else bCirc.setAttribute('stroke', '#ef4444');
+    }
+
+    if (document.getElementById('batteryVoltage')) document.getElementById('batteryVoltage').innerHTML = (res.aku_v || 0).toFixed(2) + '<span class="stat-unit">V</span>';
+    if (document.getElementById('batteryWatts')) document.getElementById('batteryWatts').innerHTML = Math.round(Math.abs(res.aku_w || 0)) + '<span class="stat-unit">W</span>';
+    if (document.getElementById('batteryAh')) document.getElementById('batteryAh').innerHTML = Math.round(res.aku_kalan_ah || 0) + '<span class="stat-unit">Ah</span>';
+
+    var curA = res.aku_a || 0;
+    var flowEl = document.getElementById('batteryFlowText');
+    if (flowEl) {
+      var absI = Math.abs(curA);
+      var strI = absI < 1.0 ? (absI * 1000).toFixed(0) + ' mA' : absI.toFixed(2) + ' A';
+      if (curA > 0.02) {
+        flowEl.innerHTML = '+' + strI; flowEl.style.color = '#22c55e';
+      } else if (curA < -0.02) {
+        flowEl.innerHTML = '-' + strI; flowEl.style.color = '#ef4444';
+      } else {
+        flowEl.innerHTML = '0.0<span class="stat-unit">A</span>'; flowEl.style.color = 'var(--text-muted)';
+      }
+    }
+  }
+
+  // 5. Güneş Paneli (Victron MPPT)
+  if (res.m_cs !== undefined) {
+    document.getElementById('solarPpv').innerHTML = Math.round(res.m_ppv || 0) + '<span class="stat-unit">W</span>';
+    document.getElementById('solarVpv').innerHTML = (res.m_vpv || 0).toFixed(1) + '<span class="stat-unit">V</span>';
+    document.getElementById('solarI').innerHTML = (res.m_i || 0).toFixed(1) + '<span class="stat-unit">A</span>';
+    document.getElementById('solarYield').innerText = (res.m_y || 0).toFixed(2) + ' kWh';
+
+    var csArr = dict.solar_states || ["Kapalı","","Arıza","Bulk","Absorp","Float"];
+    var csStr = (res.m_cs >= 0 && res.m_cs < csArr.length) ? csArr[res.m_cs] : "Bilinmiyor";
+    var csBadge = document.getElementById('solarCs');
+    if (csBadge) csBadge.innerText = csStr;
+  }
+
+  // 6. Tanklar (WomoNet Dairesel Göstergeler)
+  if (res.temiz_su !== undefined || res.t_raw !== undefined) {
+    var tVal = (res.temiz_su !== undefined) ? parseInt(res.temiz_su, 10) : 0;
+    currentTemizSuYuzde = tVal;
+    var elT = document.getElementById('temiz-su-val');
+    if (elT) {
+      elT.textContent = '%' + tVal;
+      try { elT.innerText = '%' + tVal; } catch(e){}
+    }
+    document.querySelectorAll('.val-temiz-text').forEach(function(x){
+      x.textContent = '%' + tVal;
+      try { x.innerText = '%' + tVal; } catch(e){}
+    });
+    var arcT = document.getElementById('arc-temiz-su');
+    var offsetT = 339.29 * (1 - (tVal / 100));
+    if (arcT) {
+      arcT.setAttribute('stroke-dashoffset', offsetT);
+      if (tVal > 50) arcT.setAttribute('stroke', '#00A3FF');
+      else if (tVal > 20) arcT.setAttribute('stroke', '#f59e0b');
+      else arcT.setAttribute('stroke', '#ef4444');
+    }
+    document.querySelectorAll('.arc-fill-temiz').forEach(function(x){ x.setAttribute('stroke-dashoffset', offsetT); });
+    var lblT = document.getElementById('lbl_temiz_tank_st');
+    if (lblT) lblT.innerText = (tVal > 75) ? 'Dolu' : ((tVal > 25) ? 'Normal' : 'Boş');
+  }
+  if (res.gri_su !== undefined || res.g_raw !== undefined) {
+    var gVal = (res.gri_su !== undefined) ? parseInt(res.gri_su, 10) : 0;
+    var elG = document.getElementById('gri-su-val');
+    if (elG) {
+      elG.textContent = '%' + gVal;
+      try { elG.innerText = '%' + gVal; } catch(e){}
+    }
+    document.querySelectorAll('.val-gri-text').forEach(function(x){
+      x.textContent = '%' + gVal;
+      try { x.innerText = '%' + gVal; } catch(e){}
+    });
+    var arcG = document.getElementById('arc-gri-su');
+    var offsetG = 339.29 * (1 - (gVal / 100));
+    if (arcG) {
+      arcG.setAttribute('stroke-dashoffset', offsetG);
+      if (gVal > 80) arcG.setAttribute('stroke', '#ef4444');
+      else if (gVal > 50) arcG.setAttribute('stroke', '#f59e0b');
+      else arcG.setAttribute('stroke', 'var(--accent-grey)');
+    }
+    document.querySelectorAll('.arc-fill-gri').forEach(function(x){ x.setAttribute('stroke-dashoffset', offsetG); });
+    var lblG = document.getElementById('lbl_gri_tank_st');
+    if (lblG) lblG.innerText = (gVal > 80) ? 'Dolu (Boşaltın)' : 'Normal';
+  }
+
+  // 7. Sıcaklık & Nem
+  if (res.ic_isi !== undefined) {
+    var tIn = document.getElementById('tempInternal'); if (tIn) tIn.innerHTML = res.ic_isi + '<span class="stat-unit">°C</span>';
+    document.querySelectorAll('.val-temp-in').forEach(function(x){ x.innerHTML = res.ic_isi + '<span class="stat-unit">°C</span>'; });
+  }
+  if (res.ic_nem !== undefined) {
+    var hIn = document.getElementById('humInternal'); if (hIn) hIn.innerHTML = '%' + res.ic_nem;
+    document.querySelectorAll('.val-hum-in').forEach(function(x){ x.innerHTML = '%' + res.ic_nem; });
+  }
+  if (res.dis_isi !== undefined) {
+    var tOut = document.getElementById('tempExternal'); if (tOut) tOut.innerHTML = res.dis_isi + '<span class="stat-unit">°C</span>';
+    document.querySelectorAll('.val-temp-out').forEach(function(x){ x.innerHTML = res.dis_isi + '<span class="stat-unit">°C</span>'; });
+  }
+
+  // 8. Alarm
+  gAlarmState = res.al_st || 0;
+  gAlarmSure = res.al_sure || 0;
+  updateAlarmUI(gAlarmState, gAlarmSure);
+
+  var isGaz = (res.gaz === true || res.gaz === 'true' || res.gaz === 1);
+  if (!isGaz) isGasSilenced = false;
+  var gModal = document.getElementById('gas-modal');
+  if (gModal) {
+    if (isGaz && !isGasSilenced) {
+      gModal.style.display = 'flex';
+      playTone(900, 'square', 0.5);
+      setTimeout(function(){ playTone(700, 'square', 0.5); }, 500);
+    } else {
+      gModal.style.display = 'none';
+    }
+  }
+
+  if (isGaz || gAlarmState == 4) {
+    playTone(900, 'square', 0.5);
+    setTimeout(function(){ playTone(700, 'square', 0.5); }, 500);
+  }
+
+  if (res.h_raw !== undefined) document.getElementById('ind_h').style.background = (res.h_raw == 0) ? '#ef4444' : '#22c55e';
+  if (res.g_raw !== undefined) document.getElementById('ind_g').style.background = (res.g_raw == 0) ? '#ef4444' : '#22c55e';
+}
+
+function updateAlarmUI(aSt, aT) {
+  var title = document.getElementById('alarmStatusText');
+  var sub = document.getElementById('alarmSubText');
+  var btnK = document.getElementById('btnAlarmKur');
+  var btnX = document.getElementById('btnAlarmKapat');
+  if (!title) return;
+
+  if (aSt == 0) {
+    title.innerText = "Alarm Kapalı"; title.style.color = "var(--text-primary)";
+    sub.innerText = "Sistem devrede değil"; btnK.style.display = 'block'; btnX.style.display = 'none';
+  } else if (aSt == 1) {
+    title.innerText = "Çıkış Bekleniyor"; title.style.color = '#f59e0b';
+    sub.innerText = aT + ' sn içinde çıkın'; btnK.style.display = 'none'; btnX.style.display = 'block';
+  } else if (aSt == 2) {
+    title.innerText = "Alarm Kurulu"; title.style.color = '#22c55e';
+    sub.innerText = "Güvendesiniz"; btnK.style.display = 'none'; btnX.style.display = 'block';
+  } else if (aSt == 3) {
+    title.innerText = "Giriş Algılandı!"; title.style.color = '#ef4444';
+    sub.innerText = aT + ' sn içinde şifre girin!'; btnK.style.display = 'none'; btnX.style.display = 'block';
+  } else if (aSt == 4) {
+    title.innerText = "ALARM ÇALIYOR!"; title.style.color = '#ef4444';
+    sub.innerText = "Siren devrede!"; btnK.style.display = 'none'; btnX.style.display = 'block';
+  }
+
+  if (aSt == 3 || aSt == 4) {
+    if (document.getElementById('pass-modal').style.display === 'none') kapatAlarmModalAc();
+  }
+}
+
+// ==========================================
+// KONTROL AKSİYONLARI (RELAY & DIMMER)
+// ==========================================
+function toggleRelay(id) {
+  var dict = I18N[currentLang] || I18N.tr;
+  if (id !== 'sistem' && !isSystemOn) {
+    showA(dict.msg_sys_off, dict.msg_sys_off_desc, false);
+    return;
+  }
+  if (relayBusy[id]) return;
+  relayBusy[id] = true;
+
+  var wantOn = false;
+  if (id === 'sistem') {
+    wantOn = !isSystemOn;
+  } else if (id === 'r0') {
+    // Fiziki Röle 1: Su Pompası (Hidrofor)
+    var pumpBtn = document.getElementById('btn_pump');
+    var isPumpOn = pumpBtn ? (pumpBtn.classList.contains('active-magenta') || pumpBtn.classList.contains('active-blue')) : false;
+    wantOn = !isPumpOn;
+    if (wantOn && isDryRunProtectionOn && currentTemizSuYuzde === 0) {
+      showA("Susuz Çalıştırma Koruması", "Temiz su deposu boş olduğu için su pompası çalıştırılamaz!", false);
+      relayBusy[id] = false;
+      return;
+    }
+  } else if (id === 'r1') {
+    // Fiziki Röle 2: İnvertör (220V)
+    var invBtn = document.getElementById('btn_inverter');
+    var isInvOn = invBtn ? invBtn.classList.contains('active-magenta') : false;
+    wantOn = !isInvOn;
+  } else {
+    var card = document.getElementById('card_' + id);
+    var wasOn = card ? card.classList.contains('active') : false;
+    wantOn = !wasOn;
+  }
+
+  sendBleCommand('cihaz:' + id + ':' + (wantOn ? 'on' : 'off'));
+  setTimeout(function() { relayBusy[id] = false; }, 350);
+}
+
+var pwmTimers = {};
+function handlePwmSlider(idx, val) {
+  var perc = document.getElementById('st_p' + idx);
+  if (perc) {
+    perc.innerText = '%' + val;
+    if (val > 0) perc.classList.add('active');
+    else perc.classList.remove('active');
+  }
+  clearTimeout(pwmTimers[idx]);
+  pwmTimers[idx] = setTimeout(function() {
+    sendBleCommand('dimmer:p' + idx + ':' + val);
+  }, 100);
+}
+
+// Buton Basılı Tutma ve Zamanlayıcı
+function sR(e, id, name) {
+  isRLP = false;
+  rT = setTimeout(function() {
+    isRLP = true;
+    if (navigator.vibrate) navigator.vibrate(40);
+    openTimerModal(id, name);
+  }, 500);
+}
+function eR(e, id) {
+  e.preventDefault();
+  clearTimeout(rT);
+  if (!isRLP) toggleRelay(id);
+}
+function cR() { clearTimeout(rT); }
+
+function openTimerModal(id, name) {
+  currentTimerId = id;
+  var dict = I18N[currentLang] || I18N.tr;
+  document.getElementById('timerTitle').innerText = name + ' (' + dict.timer + ')';
+  document.getElementById('timer-modal').style.display = 'flex';
+}
+
+function setTimer(dk) {
+  if (!currentTimerId) return;
+  var dict = I18N[currentLang] || I18N.tr;
+  sendBleCommand('zamanla:' + currentTimerId + ':' + dk);
+  document.getElementById('timer-modal').style.display = 'none';
+  showA(dict.msg_success, dk == 0 ? dict.msg_timer_cancel : dk + ' ' + dict.msg_timer_set, true);
+}
+
+// Alarm İşlemleri
+function kurAlarm() {
+  initAudio();
+  sendBleCommand('alarm:kur');
+}
+function kapatAlarmModalAc() {
+  initAudio();
+  if (gAlarmState === 1) {
+    sendBleCommand('alarm:iptal');
+    var dict = I18N[currentLang] || I18N.tr;
+    showA(dict.msg_cancel_title, dict.msg_arm_cancel, true);
+  } else {
+    document.getElementById('alarmInputPass').value = '';
+    var pM = document.getElementById('pass-modal');
+    if (pM) {
+      pM.style.zIndex = '100005';
+      pM.style.display = 'flex';
+    }
+    setTimeout(function(){ 
+      var inp = document.getElementById('alarmInputPass');
+      if (inp) inp.focus(); 
+    }, 100);
+  }
+}
+function susturGasAlarmDirect() {
+  var pInput = document.getElementById('gasAlarmPassInput');
+  var p = pInput ? pInput.value.trim() : '';
+  if (!p) {
+    var p2 = document.getElementById('alarmInputPass');
+    if (p2) p = p2.value.trim();
+  }
+  if (!p) {
+    kapatAlarmModalAc();
+    return;
+  }
+  isGasSilenced = true;
+  sendBleCommand('alarm:gaz_sustur:' + p);
+  var gM = document.getElementById('gas-modal'); if (gM) gM.style.display = 'none';
+  var pM = document.getElementById('pass-modal'); if (pM) pM.style.display = 'none';
+  var dict = I18N[currentLang] || I18N.tr;
+  showA(dict.msg_success, dict.msg_gas_silent, true);
+}
+function sifreGonder() {
+  var p = document.getElementById('alarmInputPass').value.trim();
+  var dict = I18N[currentLang] || I18N.tr;
+  var gasVisible = (document.getElementById('gas-modal').style.display === 'flex');
+  if (gasVisible) {
+    isGasSilenced = true;
+    sendBleCommand('alarm:gaz_sustur:' + p);
+    document.getElementById('pass-modal').style.display = 'none';
+    document.getElementById('gas-modal').style.display = 'none';
+    showA(dict.msg_success, dict.msg_gas_silent, true);
+    return;
+  }
+  sendBleCommand('alarm:kapat:' + p);
+  document.getElementById('pass-modal').style.display = 'none';
+  showA(dict.msg_success, dict.msg_alarm_off, true);
+}
+
+// ==========================================
+// CİHAZ LİSTELERİNİ VE FORMLARI OLUŞTURMA
+// ==========================================
+function renderDevices(cfg) {
+  var rGrid = document.getElementById('ctrlGridRelays');
+  var pGrid = document.getElementById('ctrlGridDimmers');
+  var dict = I18N[currentLang] || I18N.tr;
+
+  var rEn = cfg.rEn || [true,true,true,true,true,true,true];
+  var rawRNm = cfg.rNm || defaultRelayNames;
+  var rNm = rawRNm.map(safeDecodeName);
+  var rHtml = '';
+
+  for (var i = 0; i < 7; i++) {
+    // Hidrofor (r0) Su&Tank menüsünde, İnvertör (r1) Enerji menüsünde yer aldığından Aydınlatma menüsünden hariç tutulur
+    if (i === 0 || i === 1) continue;
+    if (rEn[i]) {
+      var nm = safeDecodeName(rNm[i]) || ('Röle ' + (i+1));
+      var safeAttrNm = nm.replace(/"/g, '&quot;');
+      rHtml += '<div class="womo-relay-tile" id="card_r' + i + '" data-id="r' + i + '" data-nm="' + safeAttrNm + '">' +
+        '<div class="relay-top-row">' +
+          '<div class="relay-title" id="title_r' + i + '">' + nm + '</div>' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 12h12"/></svg>' +
+        '</div>' +
+        '<div class="relay-status" id="st_r' + i + '">' + dict.off + '</div>' +
+      '</div>';
+    }
+  }
+  if (rGrid) rGrid.innerHTML = rHtml;
+
+  var pEn = cfg.pEn || [true,true,true,true];
+  var rawPNm = cfg.pNm || ["Tavan LED","Mutfak LED","Yatak LED","Ortam Işık"];
+  var pNm = rawPNm.map(safeDecodeName);
+  var pHtml = '';
+
+  for (var i = 0; i < 4; i++) {
+    if (pEn[i]) {
+      var nm = safeDecodeName(pNm[i]) || ('Dimmer ' + (i+1));
+      var safeAttrNm = nm.replace(/"/g, '&quot;');
+      pHtml += '<div class="dimmer-item" id="card_p' + i + '" data-id="p' + i + '" data-nm="' + safeAttrNm + '">' +
+        '<div class="dimmer-header" id="dimmerHdr_p' + i + '">' +
+          '<span class="param-label" id="title_p' + i + '">' + nm + '</span>' +
+          '<span class="dimmer-perc" id="st_p' + i + '">%0</span>' +
+        '</div>' +
+        '<div class="dimmer-row">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8F97B0" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/></svg>' +
+          '<input type="range" min="0" max="100" value="0" id="range_p' + i + '" oninput="handlePwmSlider(' + i + ', this.value)" class="womo-slider">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C026D3" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+  if (pGrid) pGrid.innerHTML = pHtml;
+
+  // Röle tıklama ve basılı tutma dinleyicilerini bağla
+  document.querySelectorAll('.womo-relay-tile').forEach(function(el) {
+    el.onmousedown = el.ontouchstart = function(e){ sR(e, el.dataset.id, el.dataset.nm); };
+    el.onmouseup = el.ontouchend = function(e){ eR(e, el.dataset.id); };
+    el.onmouseleave = el.ontouchcancel = function(){ cR(); };
+  });
+
+  // Dimmer başlığına basılı tutma (Zamanlayıcı) dinleyicilerini bağla
+  document.querySelectorAll('.dimmer-item').forEach(function(el) {
+    var hdr = el.querySelector('.dimmer-header');
+    if (hdr) {
+      hdr.onmousedown = hdr.ontouchstart = function(e){ sR(e, el.dataset.id, el.dataset.nm); };
+      hdr.onmouseup = hdr.ontouchend = function(e){ cR(); };
+      hdr.onmouseleave = hdr.ontouchcancel = function(){ cR(); };
+    }
+  });
+}
+
+function buildConfigFormInputs(cfg) {
+  var rEn = cfg.rEn || [true,true,true,true,true,true,true];
+  var rawRNm = cfg.rNm || defaultRelayNames;
+  var rNm = rawRNm.map(safeDecodeName);
+  var rHtml = '';
+  for (var i = 0; i < 7; i++) {
+    // Röle 1 (Su Pompası - r0) ve Röle 2 (İnvertör - r1) sistem fonksiyonları olduğundan ayarlar menüsünden kaldırılmıştır
+    if (i === 0 || i === 1) continue;
+    var nm = safeDecodeName(rNm[i]) || ('Röle ' + (i+1));
+    var safeVal = nm.replace(/"/g, '&quot;');
+    rHtml += '<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">' +
+      '<input type="checkbox" id="cfg_r' + i + '_en" style="width:18px;height:18px;" ' + (rEn[i] ? 'checked' : '') + '>' +
+      '<input type="text" id="cfg_r' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:var(--text-primary); border:1px solid var(--border-card); padding:8px 12px; border-radius:8px;">' +
+    '</div>';
+  }
+  var rCont = document.getElementById('relayConfigContainer');
+  if (rCont) rCont.innerHTML = rHtml;
+
+  var pEn = cfg.pEn || [true,true,true,true];
+  var rawPNm = cfg.pNm || ["Tavan LED","Mutfak LED","Yatak LED","Ortam Işık"];
+  var pNm = rawPNm.map(safeDecodeName);
+  var pHtml = '';
+  for (var i = 0; i < 4; i++) {
+    var nm = safeDecodeName(pNm[i]) || ('Dimmer ' + (i+1));
+    var safeVal = nm.replace(/"/g, '&quot;');
+    pHtml += '<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">' +
+      '<input type="checkbox" id="cfg_p' + i + '_en" style="width:18px;height:18px;" ' + (pEn[i] ? 'checked' : '') + '>' +
+      '<input type="text" id="cfg_p' + i + '_nm" value="' + safeVal + '" style="flex:1; background:var(--bg-track); color:var(--text-primary); border:1px solid var(--border-card); padding:8px 12px; border-radius:8px;">' +
+    '</div>';
+  }
+  var pCont = document.getElementById('pwmConfigContainer');
+  if (pCont) pCont.innerHTML = pHtml;
+}
+
+function toggleManuel(show) {
+  var el = document.getElementById('manuelDiv');
+  if (el) el.style.display = show ? 'block' : 'none';
+}
+
+function updateTanksVisibility(showT, showG) {
+  var tCard = document.getElementById('card_temiz_su');
+  var gCard = document.getElementById('card_gri_su');
+  if (tCard) tCard.style.display = showT ? 'flex' : 'none';
+  if (gCard) gCard.style.display = showG ? 'flex' : 'none';
+  var dGrid = document.querySelector('#tab-water .dual-tank-grid');
+  if (dGrid) {
+    if (!showT && !showG) {
+      dGrid.style.display = 'none';
+    } else {
+      dGrid.style.display = 'grid';
+      dGrid.style.gridTemplateColumns = (showT && showG) ? '1fr 1fr' : '1fr';
+    }
+  }
+}
+
+function applyConfigToUI(cfg) {
+  if (cfg.lang && cfg.lang !== currentLang) {
+    applyLanguage(cfg.lang);
+  }
+  renderDevices(cfg);
+  buildConfigFormInputs(cfg);
+
+  var showT = (cfg.st === undefined) ? true : (cfg.st === true || cfg.st === '1' || cfg.st === 1);
+  var showG = (cfg.sg === undefined) ? true : (cfg.sg === true || cfg.sg === '1' || cfg.sg === 1);
+  if (document.getElementById('cfg_s_temiz')) document.getElementById('cfg_s_temiz').checked = showT;
+  if (document.getElementById('cfg_s_gri')) document.getElementById('cfg_s_gri').checked = showG;
+  updateTanksVisibility(showT, showG);
+
+  if (cfg.hk !== undefined) {
+    if (document.getElementById('cfg_h_koruma')) document.getElementById('cfg_h_koruma').checked = cfg.hk;
+    isDryRunProtectionOn = (cfg.hk === true || cfg.hk === '1' || cfg.hk === 1);
+    var bDry = document.getElementById('badge_dry_run');
+    if (bDry) bDry.style.display = isDryRunProtectionOn ? 'flex' : 'none';
+  }
+  if (cfg.pt !== undefined && document.getElementById('cfg_p_tip')) document.getElementById('cfg_p_tip').value = cfg.pt;
+  if (cfg.atip !== undefined && document.getElementById('cfg_aku_tipi')) document.getElementById('cfg_aku_tipi').value = cfg.atip;
+  if (cfg.akap !== undefined && document.getElementById('cfg_aku_kapasite')) document.getElementById('cfg_aku_kapasite').value = cfg.akap;
+  if (cfg.alPass !== undefined && document.getElementById('cfg_al_pass')) document.getElementById('cfg_al_pass').value = cfg.alPass;
+  if (cfg.alCikis !== undefined && document.getElementById('cfg_al_cikis')) document.getElementById('cfg_al_cikis').value = cfg.alCikis;
+  if (cfg.alGiris !== undefined && document.getElementById('cfg_al_giris')) document.getElementById('cfg_al_giris').value = cfg.alGiris;
+}
+
+// ==========================================
+// AYARLARI KAYDETME (LOCALSTORAGE + BLE)
+// ==========================================
+function kaydetAyarlar() {
+  var dict = I18N[currentLang] || I18N.tr;
+  var cfgObj = {
+    atip: document.getElementById('cfg_aku_tipi').value,
+    akap: parseFloat(document.getElementById('cfg_aku_kapasite').value) || 100,
+    st: document.getElementById('cfg_s_temiz').checked,
+    sg: document.getElementById('cfg_s_gri').checked,
+    hk: document.getElementById('cfg_h_koruma').checked,
+    pt: document.getElementById('cfg_p_tip').value,
+    alPass: document.getElementById('cfg_al_pass').value,
+    alCikis: parseInt(document.getElementById('cfg_al_cikis').value) || 30,
+    alGiris: parseInt(document.getElementById('cfg_al_giris').value) || 30,
+    lang: currentLang,
+    gMod: true,
+    rEn: [], rNm: [], pEn: [], pNm: []
+  };
+
+  var payload = '';
+  payload += 'atip=' + cfgObj.atip + ';';
+  payload += 'akap=' + cfgObj.akap + ';';
+  var yontemEl = document.querySelector('input[name="aku_yontem"]:checked');
+  var yontem = yontemEl ? yontemEl.value : 'koru';
+  payload += 'ayontem=' + yontem + ';';
+  if (yontem === 'manuel') {
+    var mYuzde = parseFloat(document.getElementById('cfg_aku_manuel_yuzde').value) || 100;
+    payload += 'amanuel=' + mYuzde + ';';
+  }
+  payload += 'st=' + (cfgObj.st ? '1' : '0') + ';';
+  payload += 'sg=' + (cfgObj.sg ? '1' : '0') + ';';
+  payload += 'hk=' + (cfgObj.hk ? '1' : '0') + ';';
+  payload += 'pt=' + cfgObj.pt + ';';
+  payload += 'alPass=' + cfgObj.alPass + ';';
+  payload += 'alCikis=' + cfgObj.alCikis + ';';
+  payload += 'alGiris=' + cfgObj.alGiris + ';';
+  payload += 'lang=' + cfgObj.lang + ';';
+  payload += 'gMod=1;';
+
+  for (var i = 0; i < 7; i++) {
+    var enEl = document.getElementById('cfg_r' + i + '_en');
+    var nmEl = document.getElementById('cfg_r' + i + '_nm');
+    var isEn = enEl ? enEl.checked : true;
+    var rawNm = nmEl ? nmEl.value.trim() : (defaultRelayNames[i] || ('Röle ' + (i+1)));
+    var cleanNm = safeDecodeName(rawNm);
+    cfgObj.rEn.push(isEn);
+    cfgObj.rNm.push(cleanNm);
+    payload += 'r' + i + '_en=' + (isEn ? '1' : '0') + ';';
+    payload += 'r' + i + '_nm=' + encodeURIComponent(cleanNm) + ';';
+  }
+  for (var i = 0; i < 4; i++) {
+    var enEl = document.getElementById('cfg_p' + i + '_en');
+    var nmEl = document.getElementById('cfg_p' + i + '_nm');
+    var isEn = enEl ? enEl.checked : true;
+    var rawNm = nmEl ? nmEl.value.trim() : ('Dimmer ' + (i+1));
+    var cleanNm = safeDecodeName(rawNm);
+    cfgObj.pEn.push(isEn);
+    cfgObj.pNm.push(cleanNm);
+    payload += 'p' + i + '_en=' + (isEn ? '1' : '0') + ';';
+    payload += 'p' + i + '_nm=' + encodeURIComponent(cleanNm) + ';';
+  }
+
+  // 1. Tarayıcı hafızasına anında kaydet (girip çıkınca silinmez)
+  lastConfigData = cfgObj;
+  localStorage.setItem('karavan_config', JSON.stringify(cfgObj));
+  applyConfigToUI(cfgObj);
+
+  // 2. BLE bağlı ise ESP32'ye gönder
+  if (isBleConnected) {
+    sendBleCommand('set_cfg:' + payload);
+  }
+
+  showA(dict.msg_success, dict.save_settings + " - " + dict.msg_success, true);
+}
+
+// ==========================================
+// SAYFA İLK YÜKLEME
+// ==========================================
+document.addEventListener('DOMContentLoaded', function() {
+  var savedTheme = 'dark';
+  try {
+    savedTheme = localStorage.getItem('karavan_theme') || 'dark';
+  } catch(e){}
+  setAppTheme(savedTheme);
+
+  var savedConfig = localStorage.getItem('karavan_config');
+  if (savedConfig) {
+    try {
+      lastConfigData = JSON.parse(savedConfig);
+    } catch(e) {}
+  }
+
+  applyLanguage(currentLang);
+  applyConfigToUI(lastConfigData);
+
+  var sTemizEl = document.getElementById('cfg_s_temiz');
+  var sGriEl = document.getElementById('cfg_s_gri');
+  if (sTemizEl) {
+    sTemizEl.addEventListener('change', function() {
+      var st = sTemizEl.checked;
+      var sg = sGriEl ? sGriEl.checked : true;
+      updateTanksVisibility(st, sg);
+    });
+  }
+  if (sGriEl) {
+    sGriEl.addEventListener('change', function() {
+      var sg = sGriEl.checked;
+      var st = sTemizEl ? sTemizEl.checked : true;
+      updateTanksVisibility(st, sg);
+    });
+  }
+
+  switchWomoTab('tab-energy');
+  autoConnectIfPaired();
+});
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible' && !isBleConnected && localStorage.getItem('karavan_ble_paired') === '1') {
+    autoConnectIfPaired();
+  }
+});
+
+window.addEventListener('pointerdown', function() {
+  if (!isBleConnected && localStorage.getItem('karavan_ble_paired') === '1') {
+    autoConnectIfPaired();
+  }
+}, { passive: true });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
+        console.log('SW Registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('SW Fail:', err);
+      });
+    });
+  }
+</script>
+</div>
+</body>
+</html>
