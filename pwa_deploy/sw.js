@@ -1,5 +1,5 @@
 // Adria Karavan PWA Service Worker (Offline Cache)
-const CACHE_NAME = 'adria-karavan-v1';
+const CACHE_NAME = 'adria-karavan-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

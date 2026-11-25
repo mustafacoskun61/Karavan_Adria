@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Adria Karavan">
-  <meta name="theme-color" content="#080B15">
+  <meta name="theme-color" content="#0B131E">
     <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -15,43 +15,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-app: #080B15;
-      --bg-card: #131728;
-      --bg-card-hover: #191E32;
-      --bg-control: #21273D;
-      --bg-track: #252D48;
-      --accent-magenta: #C026D3;
-      --accent-magenta-glow: rgba(192, 38, 211, 0.4);
-      --accent-blue: #00A3FF;
-      --accent-blue-glow: rgba(0, 163, 255, 0.35);
-      --accent-grey: #5C677D;
-      --accent-green: #22c55e;
-      --accent-amber: #f59e0b;
-      --accent-red: #ef4444;
+      --bg-app: #0D111A;
+      --bg-card: #151A26;
+      --bg-card-hover: #1A2130;
+      --bg-control: #1F2738;
+      --bg-track: #29344A;
+      --accent-gradient: linear-gradient(135deg, #4338CA 0%, #6D28D9 50%, #7C3AED 100%);
+      --accent-primary: #7C3AED;
+      --accent-primary-glow: rgba(124, 58, 237, 0.4);
+      --accent-orange: #7C3AED;
+      --accent-orange-glow: rgba(124, 58, 237, 0.4);
+      --accent-magenta: #7C3AED;
+      --accent-magenta-glow: rgba(124, 58, 237, 0.4);
+      --accent-blue: #0284C7;
+      --accent-blue-glow: rgba(2, 132, 199, 0.35);
+      --accent-green: #10B981;
+      --accent-green-bg: rgba(16, 185, 129, 0.12);
+      --accent-amber: #F59E0B;
+      --accent-red: #EF4444;
       --text-primary: #FFFFFF;
-      --text-muted: #8F97B0;
-      --border-card: rgba(255, 255, 255, 0.05);
-      --radius-card: 18px;
-      --radius-control: 14px;
+      --text-muted: #94A3B8;
+      --border-card: rgba(255, 255, 255, 0.07);
+      --radius-card: 22px;
+      --radius-control: 16px;
+      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
     }
 
     body.light-mode {
-      --bg-app: #F0F2F5;
+      --bg-app: #F5F7FB;
       --bg-card: #FFFFFF;
-      --bg-card-hover: #F8FAFC;
-      --bg-control: #F1F4F9;
-      --bg-track: #E2E8F0;
-      --accent-magenta: #C026D3;
-      --accent-magenta-glow: rgba(192, 38, 211, 0.25);
+      --bg-card-hover: #F8FAFD;
+      --bg-control: #F8FAFD;
+      --bg-track: #EEF2F6;
+      --bg-box-gradient: linear-gradient(180deg, #FFFFFF 0%, #F3F6FA 100%);
+      --accent-gradient: linear-gradient(135deg, #4338CA 0%, #6D28D9 50%, #7C3AED 100%);
+      --accent-primary: #7C3AED;
+      --accent-primary-glow: rgba(124, 58, 237, 0.3);
+      --accent-orange: #7C3AED;
+      --accent-orange-glow: rgba(124, 58, 237, 0.3);
+      --accent-magenta: #7C3AED;
+      --accent-magenta-glow: rgba(124, 58, 237, 0.3);
       --accent-blue: #0284C7;
       --accent-blue-glow: rgba(2, 132, 199, 0.25);
-      --accent-grey: #64748B;
-      --accent-green: #16A34A;
+      --accent-green: #10B981;
+      --accent-green-bg: rgba(16, 185, 129, 0.12);
       --accent-amber: #D97706;
       --accent-red: #DC2626;
-      --text-primary: #0F172A;
+      --text-primary: #1E293B;
       --text-muted: #64748B;
-      --border-card: rgba(0, 0, 0, 0.08);
+      --border-card: rgba(226, 232, 240, 0.7);
+      --card-shadow: 0 8px 24px rgba(30, 41, 59, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -86,25 +99,86 @@
     body.light-mode .womo-card {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     }
-    body.light-mode input, body.light-mode select {
-      background: var(--bg-track) !important;
+
+    /* Aydınlık Mod Bilgi Çerçeveleri & Kutuları (Soft Gradient / Frosted Neumorphic Look) */
+    body.light-mode .climate-bar-grid,
+    body.light-mode .stat-4-grid,
+    body.light-mode .solar-stat-card,
+    body.light-mode .solar-yield-row,
+    body.light-mode .tank-box,
+    body.light-mode .ble-info-card,
+    body.light-mode .info-frame,
+    body.light-mode div[style*="background:var(--bg-control)"],
+    body.light-mode div[style*="background: var(--bg-control)"] {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F4F7FB 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.65) !important;
+      box-shadow: 0 2px 8px rgba(30, 41, 59, 0.025), inset 0 1px 1px #FFFFFF !important;
+    }
+
+    /* İklim Barı Ara Çizgisi */
+    body.light-mode .climate-bar-grid .climate-item:nth-child(2) {
+      border-left: 1px solid rgba(226, 232, 240, 0.75) !important;
+      border-right: 1px solid rgba(226, 232, 240, 0.75) !important;
+    }
+
+    /* Sistem Aç/Kapat ve Aksiyon Butonları (İnaktif) */
+    body.light-mode .womo-btn-action:not(.active-magenta):not(.active-orange):not(.active-blue):not(.active-gradient) {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F4F7FB 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.75) !important;
+      box-shadow: 0 2px 6px rgba(30, 41, 59, 0.025), inset 0 1px 1px #FFFFFF !important;
       color: var(--text-primary) !important;
-      border: 1px solid var(--border-card) !important;
+    }
+
+    /* Sistem Ana Şalteri İkon Kutusu */
+    body.light-mode #icon_sistem_box {
+      background: linear-gradient(180deg, #FFFFFF 0%, #EDF2F7 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.8) !important;
+      box-shadow: 0 1px 4px rgba(30, 41, 59, 0.03), inset 0 1px 1px #FFFFFF !important;
+    }
+
+    /* İnaktif Röle Kartları */
+    body.light-mode .womo-relay-tile:not(.active) {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.7) !important;
+      box-shadow: 0 3px 12px rgba(30, 41, 59, 0.03), inset 0 1px 1px #FFFFFF !important;
+    }
+    body.light-mode .womo-relay-tile:not(.active) .relay-icon-badge {
+      background: linear-gradient(180deg, #FFFFFF 0%, #EFF3F8 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.6) !important;
+      box-shadow: 0 1px 3px rgba(30, 41, 59, 0.02), inset 0 1px 1px #FFFFFF !important;
+    }
+    body.light-mode .womo-relay-tile:not(.active) .relay-pill-switch {
+      background: linear-gradient(180deg, #FFFFFF 0%, #EDF2F7 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.7) !important;
+      box-shadow: inset 0 1px 2px rgba(30, 41, 59, 0.04) !important;
+    }
+
+    /* Dimmer Kartları */
+    body.light-mode .dimmer-item {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.7) !important;
+      box-shadow: 0 3px 12px rgba(30, 41, 59, 0.03), inset 0 1px 1px #FFFFFF !important;
+    }
+
+    /* Ayarlar ve Form Alanları */
+    body.light-mode input, body.light-mode select {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F7FAFD 100%) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid rgba(226, 232, 240, 0.8) !important;
+      box-shadow: inset 0 1px 2px rgba(30, 41, 59, 0.04) !important;
     }
     body.light-mode input::placeholder {
       color: var(--text-muted) !important;
     }
-    body.light-mode .ble-info-card {
-      background: var(--bg-control);
-    }
-    body.light-mode .ble-info-row {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    body.light-mode .womo-relay-tile:not(.active) {
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    body.light-mode .womo-btn-action:not(.active-magenta):not(.active-blue) {
-      border: 1px solid rgba(0, 0, 0, 0.08);
+
+    body.light-mode div[style*="background:var(--bg-track)"],
+    body.light-mode div[style*="background: var(--bg-track)"],
+    body.light-mode label[style*="background:var(--bg-track)"],
+    body.light-mode label[style*="background: var(--bg-track)"],
+    body.light-mode button[style*="background:var(--bg-track)"],
+    body.light-mode button[style*="background: var(--bg-track)"] {
+      background: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 100%) !important;
+      border: 1px solid rgba(226, 232, 240, 0.7) !important;
     }
 
     /* Ana Konteyner */
@@ -149,80 +223,118 @@
 
     /* WomoNet Kart Yapısı */
     .womo-card {
-      background: var(--bg-card); border-radius: var(--radius-card); padding: 16px; margin: 0 14px 14px 14px;
-      border: 1px solid var(--border-card); box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      background: var(--bg-card); border-radius: var(--radius-card); padding: 14px; margin: 0 10px 12px 10px;
+      border: 1px solid var(--border-card); box-shadow: var(--card-shadow);
+      transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
-    .womo-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .womo-card-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .womo-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .womo-card-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: var(--text-primary); }
     .womo-card-title svg { color: var(--text-muted); flex-shrink: 0; }
 
     /* Parametre Etiketleri & Değerleri */
-    .param-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
-    .stat-val-med { font-size: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline; gap: 2px; line-height: 1.1; margin-top: 3px; }
+    .param-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .stat-val-med { font-size: 20px; font-weight: 800; color: var(--text-primary); display: flex; align-items: baseline; gap: 2px; line-height: 1.1; margin-top: 3px; letter-spacing: -0.3px; }
     .stat-unit { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-left: 2px; }
 
     /* Sekme Sayfaları (Pages) */
     .womo-page { display: none; opacity: 0; transition: opacity 0.2s ease; }
     .womo-page.active { display: block; opacity: 1; }
 
-    /* Alt Navigasyon Çubuğu (Bottom Navigation Bar) */
+    /* Alt Navigasyon Çubuğu (Floating Smart Home Dock) */
     .womo-bottom-bar {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 520px; height: 68px;
-      background: rgba(19, 23, 40, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; align-items: center;
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 520px; height: 70px;
+      background: rgba(21, 26, 38, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-card); display: flex; justify-content: space-around; align-items: center;
       z-index: 1000; padding-bottom: env(safe-area-inset-bottom, 0px);
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+    }
+    body.light-mode .womo-bottom-bar {
+      background: rgba(255, 255, 255, 0.94);
+      border-top: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 -8px 30px rgba(30, 41, 59, 0.06);
     }
     .womo-tab {
       display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%;
-      color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; gap: 3px;
+      color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; gap: 3px; position: relative;
     }
-    .womo-tab svg { width: 22px; height: 22px; transition: color 0.2s; }
+    .womo-tab svg { width: 22px; height: 22px; transition: all 0.2s; }
     .womo-tab span { font-size: 10px; font-weight: 600; white-space: nowrap; }
-    .womo-tab.active { color: var(--accent-magenta); }
-    .womo-tab.active svg { color: var(--accent-magenta); filter: drop-shadow(0 0 6px var(--accent-magenta-glow)); }
+    .womo-tab.active { color: var(--accent-primary); }
+    .womo-tab.active svg { color: var(--accent-primary); transform: translateY(-2px); }
+    .womo-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 8px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: 0 0 8px var(--accent-primary-glow);
+    }
 
     /* İklim 3-Sütunlu Bar (Climate Widget) */
     .climate-bar-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--bg-control);
-      padding: 12px; border-radius: 14px; text-align: center;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--bg-control);
+      padding: 14px; border-radius: var(--radius-control); text-align: center; border: 1px solid var(--border-card);
     }
     .climate-item { display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .climate-val {
-      font-size: 18px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline;
-      justify-content: center; gap: 2px; margin-top: 2px; line-height: 1.1;
+      font-size: 19px; font-weight: 800; color: var(--text-primary); display: flex; align-items: baseline;
+      justify-content: center; gap: 2px; margin-top: 3px; line-height: 1.1; letter-spacing: -0.3px;
     }
 
-    /* Akü Ring Göstergesi (WomoNet SVG Circle) */
     .bat-gauge-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px auto 14px auto; }
-    .bat-svg-box { width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
-    .stat-4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg-control); padding: 14px; border-radius: 16px; margin-bottom: 12px; }
+    .bat-svg-box { width: 164px; height: 164px; position: relative; display: flex; align-items: center; justify-content: center; }
+
+    /* 4 Parametre Kutusu */
+    .stat-4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg-control); padding: 14px; border-radius: var(--radius-control); margin-bottom: 12px; border: 1px solid var(--border-card); }
     .stat-box { display: flex; flex-direction: column; }
 
     /* Solar MPPT 3-Sütunlu Izgara */
     .solar-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
-    .solar-stat-card { background: var(--bg-control); padding: 10px 6px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .solar-stat-val { font-size: 17px; font-weight: 700; color: var(--text-primary); display: flex; align-items: baseline; justify-content: center; gap: 2px; margin-top: 2px; }
-    .solar-yield-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg-control); padding: 10px 14px; border-radius: 12px; }
+    .solar-stat-card { background: var(--bg-control); padding: 12px 6px; border-radius: var(--radius-control); text-align: center; display: flex; flex-direction: column; align-items: center; border: 1px solid var(--border-card); }
+    .solar-stat-val { font-size: 17px; font-weight: 800; color: var(--text-primary); display: flex; align-items: baseline; justify-content: center; gap: 2px; margin-top: 2px; }
+    .solar-yield-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg-control); padding: 12px 14px; border-radius: var(--radius-control); border: 1px solid var(--border-card); }
 
-    /* WomoNet Çift Yarım Daire Tank Göstergesi (Dual Semicircular Arc) */
-    .dual-tank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .tank-box { background: var(--bg-control); border-radius: 16px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    /* WomoNet Çift Yarım Daire Tank Göstergesi */
+    .dual-tank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .tank-box { background: var(--bg-control); border-radius: var(--radius-control); padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid var(--border-card); }
     .tank-arc-svg { width: 105px; height: 60px; overflow: visible; }
     .tank-title { font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text-primary); }
 
-    /* Röle Butonları (WomoNet Stili) */
-    .relay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    /* WomoNet Kompakt Röle Kartları (Ekrana Tam Sığan Boyut) */
+    .relay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .womo-relay-tile {
-      background: var(--bg-control); border-radius: 14px; padding: 12px 14px; display: flex;
-      flex-direction: column; justify-content: space-between; min-height: 72px; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--bg-card); border-radius: 14px; padding: 10px 12px; display: flex;
+      flex-direction: column; justify-content: space-between; min-height: 68px; cursor: pointer;
+      border: 1px solid var(--border-card); box-shadow: var(--card-shadow);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
     }
     .womo-relay-tile:active { transform: scale(0.97); }
+    .relay-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .relay-icon-badge {
+      width: 28px; height: 28px; border-radius: 8px; background: var(--bg-control);
+      display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.2s;
+    }
+    .relay-icon-badge svg { width: 15px; height: 15px; }
+    .relay-title { font-size: 12px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+    .relay-status { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 1px; }
+
+    /* Pill Switch (On / Off) */
+    .relay-pill-switch {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px;
+      background: var(--bg-track); font-size: 11px; font-weight: 700; color: var(--text-muted); transition: all 0.25s ease;
+    }
+    .relay-pill-switch .switch-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #94A3B8; transition: all 0.25s ease;
+    }
+
+    /* Aktif Kart Durumu (Vibrant Deep Gradient) */
     .womo-relay-tile.active,
     body.light-mode .womo-relay-tile.active {
-      background: var(--accent-magenta) !important;
-      border-color: var(--accent-magenta) !important;
-      box-shadow: 0 4px 18px var(--accent-magenta-glow);
+      background: var(--accent-gradient) !important;
+      border-color: transparent !important;
+      box-shadow: 0 10px 28px var(--accent-primary-glow) !important;
       color: #FFFFFF !important;
     }
     .womo-relay-tile.active *,
@@ -230,57 +342,78 @@
       color: #FFFFFF !important;
       stroke: #FFFFFF !important;
     }
-    .relay-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .relay-title { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
-    .relay-status { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .womo-relay-tile.active .relay-title,
-    body.light-mode .womo-relay-tile.active .relay-title { color: #FFFFFF !important; }
-    .womo-relay-tile.active .relay-status,
-    body.light-mode .womo-relay-tile.active .relay-status { color: rgba(255,255,255,0.95) !important; }
-    .womo-relay-tile.active svg,
-    body.light-mode .womo-relay-tile.active svg { stroke: #FFFFFF !important; color: #FFFFFF !important; }
+    .womo-relay-tile.active .relay-icon-badge {
+      background: rgba(255, 255, 255, 0.2) !important;
+      color: #FFFFFF !important;
+    }
+    .womo-relay-tile.active .relay-status {
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
+    .womo-relay-tile.active .relay-pill-switch {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #FFFFFF !important;
+    }
+    .womo-relay-tile.active .relay-pill-switch .switch-dot {
+      background: #FFFFFF !important;
+      box-shadow: 0 0 6px #FFFFFF;
+    }
 
     /* Dimmer Kaydırıcılar (WomoNet Inline Sliders) */
     .dimmer-list { display: flex; flex-direction: column; gap: 12px; }
-    .dimmer-item { background: var(--bg-control); border-radius: 14px; padding: 12px 14px; }
-    .dimmer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer; }
+    .dimmer-item { background: var(--bg-card); border-radius: var(--radius-card); padding: 10px 14px; border: 1px solid var(--border-card); box-shadow: var(--card-shadow); }
+    .dimmer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; }
     .dimmer-perc { font-size: 13px; font-weight: 700; color: var(--text-muted); }
-    .dimmer-perc.active { color: var(--accent-magenta); }
+    .dimmer-perc.active { color: var(--accent-primary); }
     .dimmer-row { display: flex; align-items: center; gap: 12px; }
     .dimmer-row svg { flex-shrink: 0; }
 
     /* Özel Range Input */
     input[type=range].womo-slider {
-      -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--bg-track); outline: none; margin: 0; flex: 1;
+      -webkit-appearance: none; width: 100%; height: 7px; border-radius: 4px; background: var(--bg-track); outline: none; margin: 0; flex: 1;
     }
     input[type=range].womo-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-magenta);
-      cursor: pointer; box-shadow: 0 0 10px var(--accent-magenta-glow); border: 2px solid #FFFFFF;
+      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #7C3AED;
+      cursor: pointer; box-shadow: 0 2px 10px rgba(124, 58, 237, 0.5); border: 2.5px solid #FFFFFF;
     }
 
     /* WomoNet Büyük Buton (Multiplus / Pompa) */
     .womo-btn-action {
-      background: var(--bg-control); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.05);
-      border-radius: var(--radius-control); padding: 12px 14px; font-size: 13px; font-weight: 700; width: 100%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s;
+      background: var(--bg-control); color: var(--text-primary); border: 1px solid var(--border-card);
+      border-radius: var(--radius-control); padding: 10px 14px; font-size: 12px; font-weight: 700; width: 100%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
     .womo-btn-action:active { transform: scale(0.98); }
+    .womo-btn-action.active-orange,
     .womo-btn-action.active-magenta,
+    .womo-btn-action.active-gradient,
+    .womo-btn-action[style*="accent-orange"],
     .womo-btn-action[style*="accent-magenta"],
+    button[style*="accent-orange"],
     button[style*="accent-magenta"],
+    body.light-mode .womo-btn-action.active-orange,
     body.light-mode .womo-btn-action.active-magenta,
+    body.light-mode .womo-btn-action[style*="accent-orange"],
     body.light-mode .womo-btn-action[style*="accent-magenta"],
+    body.light-mode button[style*="accent-orange"],
     body.light-mode button[style*="accent-magenta"] {
-      background: var(--accent-magenta) !important;
-      border-color: var(--accent-magenta) !important;
-      box-shadow: 0 4px 18px var(--accent-magenta-glow);
+      background: var(--accent-gradient) !important;
+      border-color: transparent !important;
+      box-shadow: 0 8px 24px var(--accent-primary-glow) !important;
       color: #FFFFFF !important;
     }
+    .womo-btn-action.active-orange *,
     .womo-btn-action.active-magenta *,
+    .womo-btn-action.active-gradient *,
+    .womo-btn-action[style*="accent-orange"] *,
     .womo-btn-action[style*="accent-magenta"] *,
+    button[style*="accent-orange"] *,
     button[style*="accent-magenta"] *,
+    body.light-mode .womo-btn-action.active-orange *,
     body.light-mode .womo-btn-action.active-magenta *,
+    body.light-mode .womo-btn-action[style*="accent-orange"] *,
     body.light-mode .womo-btn-action[style*="accent-magenta"] *,
+    body.light-mode button[style*="accent-orange"] *,
     body.light-mode button[style*="accent-magenta"] * {
       color: #FFFFFF !important;
       stroke: #FFFFFF !important;
@@ -304,11 +437,11 @@
 
     /* Radar Animasyonu */
     .radar-wrap { position: relative; width: 80px; height: 80px; margin: 8px auto 14px auto; display: flex; align-items: center; justify-content: center; }
-    .radar-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--accent-magenta); opacity: 0; pointer-events: none; }
+    .radar-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--accent-primary); opacity: 0; pointer-events: none; }
     .radar-ring.pulse { animation: radar-anim 2s infinite cubic-bezier(0.2,0.8,0.4,1); }
     .radar-ring.pulse:nth-child(2) { animation-delay: 0.7s; }
     @keyframes radar-anim { 0% { transform: scale(0.6); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
-    .radar-core { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-control); border: 2px solid var(--border-card); display: flex; align-items: center; justify-content: center; color: var(--accent-magenta); box-shadow: 0 4px 16px var(--accent-magenta-glow); z-index: 2; }
+    .radar-core { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-control); border: 2px solid var(--border-card); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); box-shadow: 0 4px 16px var(--accent-primary-glow); z-index: 2; }
     .radar-core.connected { border-color: var(--accent-green); color: var(--accent-green); box-shadow: 0 0 25px rgba(34,197,94,0.4); }
     .ble-stat-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 14px; }
     .ble-stat-badge.disconnected { background: rgba(239,68,68,0.15); color: var(--accent-red); }
@@ -316,6 +449,40 @@
     .ble-info-card { background: var(--bg-control); border-radius: 14px; padding: 10px 12px; margin-bottom: 14px; text-align: left; font-size: 12px; }
     .ble-info-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
     .ble-info-row:last-child { border-bottom: none; }
+
+    /* 220V Şebeke Üst Bar Rozeti */
+    .ac220-pill {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #FBBF24;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .ac220-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+      display: inline-block;
+    }
+    .ac220-pill svg {
+      display: block;
+    }
+    body.light-mode .ac220-pill {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(217, 119, 6, 0.4);
+      color: #D97706;
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
+    }
   </style>
 </head>
 <body>
@@ -329,6 +496,14 @@
       <div class="logo-adria"></div>
     </div>
     <div class="womo-header-right">
+      <div class="ac220-pill" id="badge_220v" title="220V Şebeke Bağlı">
+        <span class="ac220-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 7h12a2 2 0 0 1 2 2v2a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6V9a2 2 0 0 1 2-2z"/>
+          <path d="M12 8.5l-1.5 2.5h3L12 13.5" stroke="#F59E0B" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>220V</span>
+      </div>
       <div class="ble-pill" id="blePillBtn" onclick="openBleModal()" title="Bluetooth Bağlantı Merkezi">
         <span class="ble-dot" id="bleDot"></span>
         <span id="blePillText">BLE</span>
@@ -341,18 +516,63 @@
     </div>
   </header>
 
-  <!-- ========================================== -->
+    <!-- ========================================== -->
   <!-- 1. TAB: ENERJİ & GENEL BAKIŞ (VARSAYILAN)  -->
   <!-- ========================================== -->
   <div id="tab-energy" class="womo-page active">
-    <!-- Sıcaklık & Nem Kartı (Hero Climate Bar) -->
-    <div class="womo-card" style="margin-bottom:12px;">
+    <!-- Ana Sistem Şalteri (Kompakt Üst Bar) -->
+    <div class="womo-card" style="margin-bottom:12px; padding:12px 16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div id="icon_sistem_box" style="width:34px; height:34px; border-radius:10px; background:var(--bg-track); display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:all 0.3s ease;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); line-height:1.2;" data-i18n="system_status">SİSTEM DURUMU</div>
+            <div style="font-size:11px; color:var(--text-secondary);" id="st_sistem_text" data-i18n="system_inactive">Sistem Kapalı</div>
+          </div>
+        </div>
+        <button type="button" class="womo-btn-action" id="card_sistem" onclick="toggleRelay('sistem')" style="width:auto; padding:8px 16px; font-size:12px; border-radius:10px; margin:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+          <span id="st_sistem" data-i18n="system_turn_on">Sistemi Aç</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Saat, Hava Durumu & İklim Kartı -->
+    <div class="womo-card" style="margin-bottom:12px; padding:14px 16px;">
+      <!-- Üst Satır: Dijital Saat & Canlı Hava Durumu -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border-card);">
+        <!-- Sol: Canlı Saat ve Tarih -->
+        <div>
+          <div style="display:flex; align-items:baseline; gap:3px;">
+            <div id="heroClock" style="font-size:26px; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; line-height:1;">--:--</div>
+            <div id="heroClockSec" style="font-size:12px; font-weight:700; color:var(--text-muted); line-height:1;">:--</div>
+          </div>
+          <div id="heroDate" style="font-size:11px; font-weight:600; color:var(--text-muted); margin-top:4px;">--</div>
+        </div>
+
+        <!-- Sağ: Hava Durumu İkonu & Durumu -->
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div id="heroWeatherIcon" style="width:36px; height:36px; border-radius:10px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); display:flex; align-items:center; justify-content:center; color:#38BDF8;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-primary); line-height:1.2;" id="heroWeatherText">Hava Durumu</div>
+            <div style="font-size:10px; font-weight:600; color:var(--text-muted); margin-top:2px;" id="heroWeatherSub">Dış Ortam</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alt Satır: İç Isı, Nem, Dış Isı -->
       <div class="climate-bar-grid">
         <div class="climate-item">
           <span class="param-label" data-i18n="in_temp">İÇ ISI</span>
           <div class="climate-val" id="tempInternal">--<span class="stat-unit">°C</span></div>
         </div>
-        <div class="climate-item" style="border-left:1px solid rgba(255,255,255,0.06); border-right:1px solid rgba(255,255,255,0.06);">
+        <div class="climate-item" style="border-left:1px solid var(--border-card); border-right:1px solid var(--border-card);">
           <span class="param-label" data-i18n="humidity">NEM</span>
           <div class="climate-val" id="humInternal">--<span class="stat-unit">%</span></div>
         </div>
@@ -372,13 +592,21 @@
         </div>
       </div>
 
-      <!-- WomoNet Daire Gauge -->
-      <div class="bat-gauge-wrap">
-        <div class="bat-svg-box">
-          <svg viewBox="0 0 140 140" width="130" height="130" style="overflow:visible;">
-            <circle cx="70" cy="70" r="54" fill="none" stroke="var(--bg-track)" stroke-width="10"/>
-            <circle id="bat-circle" cx="70" cy="70" r="54" fill="none" stroke="var(--accent-magenta)" stroke-width="10" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 1s ease, stroke 0.4s ease;"/>
-            <text x="70" y="70" text-anchor="middle" dominant-baseline="central" font-size="28" font-weight="700" fill="var(--text-primary)" id="bat-perc">%0</text>
+      <!-- Sade Dairesel Akü Göstergesi -->
+      <div style="display:flex; justify-content:center; align-items:center; margin:10px 0 6px 0;">
+        <div style="width:120px; height:120px; position:relative; display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 140 140" width="120" height="120" style="overflow:visible;">
+            <defs>
+              <linearGradient id="dialGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4F14E3"/>
+                <stop offset="50%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#A855F7"/>
+              </linearGradient>
+            </defs>
+            <circle cx="70" cy="70" r="54" fill="none" stroke="var(--bg-track)" stroke-width="12"/>
+            <circle id="bat-circle" cx="70" cy="70" r="54" fill="none" stroke="url(#dialGradient)" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;"/>
+            <text x="70" y="63" text-anchor="middle" dominant-baseline="central" font-size="28" font-weight="800" fill="var(--text-primary)" id="bat-perc">100</text>
+            <text x="70" y="85" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="var(--text-muted)" letter-spacing="0.5" id="lbl_lithium">LiFePO4</text>
           </svg>
         </div>
       </div>
@@ -445,19 +673,7 @@
   <!-- 2. TAB: AYDINLATMA & CİHAZLAR (LICHT)      -->
   <!-- ========================================== -->
   <div id="tab-light" class="womo-page">
-    <!-- Ana Sistem Şalteri -->
-    <div class="womo-card" style="margin-bottom:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div class="param-label" data-i18n="system_status">SİSTEM DURUMU</div>
-          <div style="font-size:17px; font-weight:700; color:var(--text-primary); margin-top:2px;" id="st_sistem_text">Kapalı</div>
-        </div>
-        <button type="button" class="womo-btn-action" id="card_sistem" onclick="toggleRelay('sistem')" style="width:auto; padding:10px 18px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
-          <span id="st_sistem" data-i18n="system_switch">Ana Şalter</span>
-        </button>
-      </div>
-    </div>
+    
 
     <!-- Röleler & Anahtarlar -->
     <div class="womo-card">
@@ -509,7 +725,7 @@
             </svg>
           </div>
           <div class="tank-title" data-i18n="fresh_water">Temiz Su</div>
-          <span class="param-label" style="margin-top:2px;" id="lbl_temiz_tank_st">Boş</span>
+          <span class="param-label" style="margin-top:2px;" id="lbl_temiz_tank_st" data-i18n="tank_empty">Boş</span>
         </div>
 
         <!-- Gri Su -->
@@ -522,7 +738,7 @@
             </svg>
           </div>
           <div class="tank-title" data-i18n="grey_water">Gri Su</div>
-          <span class="param-label" style="margin-top:2px;" id="lbl_gri_tank_st">Boş</span>
+          <span class="param-label" style="margin-top:2px;" id="lbl_gri_tank_st" data-i18n="tank_empty">Boş</span>
         </div>
       </div>
 
@@ -571,18 +787,19 @@
     <div class="womo-card">
       <div class="womo-card-header">
         <div class="womo-card-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-magenta)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <span data-i18n="security">Güvenlik & Alarm</span>
         </div>
       </div>
 
       <div style="background:var(--bg-control); border-radius:14px; padding:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <div style="font-size:15px; font-weight:700; color:var(--text-primary);" id="alarmStatusText">Alarm Kapalı</div>
-          <div class="param-label" style="margin-top:3px;" id="alarmSubText">Sistem devrede değil</div>
+          <div style="font-size:15px; font-weight:700; color:var(--text-primary);" id="alarmStatusText" data-i18n="alarm_state_off_title">Alarm Kapalı</div>
+          <div class="param-label" style="margin-top:3px;" id="alarmSubText" data-i18n="alarm_state_off_sub">Sistem devrede değil</div>
+          <div id="alarmTimeBadge" style="display:none; font-size:11px; font-weight:700; color:#EF4444; margin-top:4px;"></div>
         </div>
         <div style="display:flex; gap:8px;">
-          <button type="button" onclick="kurAlarm()" id="btnAlarmKur" class="womo-btn-action active-magenta" style="padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="arm_alarm">Alarmı Kur</button>
+          <button type="button" onclick="kurAlarm()" id="btnAlarmKur" class="womo-btn-action active-orange" style="padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="arm_alarm">Alarmı Kur</button>
           <button type="button" onclick="kapatAlarmModalAc()" id="btnAlarmKapat" style="display:none; background:#ef4444; color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer;" data-i18n="disarm_alarm">Alarmı Kapat</button>
         </div>
       </div>
@@ -591,11 +808,11 @@
       <div style="display:flex; gap:10px;">
         <div style="flex:1; background:var(--bg-control); padding:10px; border-radius:12px; display:flex; align-items:center; gap:8px;">
           <span style="width:10px; height:10px; border-radius:50%; background:#22c55e;" id="ind_h"></span>
-          <span style="font-size:12px; font-weight:600;">Kapı/Pencere</span>
+          <span style="font-size:12px; font-weight:600;" data-i18n="door_window">Kapı/Pencere</span>
         </div>
         <div style="flex:1; background:var(--bg-control); padding:10px; border-radius:12px; display:flex; align-items:center; gap:8px;">
           <span style="width:10px; height:10px; border-radius:50%; background:#22c55e;" id="ind_g"></span>
-          <span style="font-size:12px; font-weight:600;">Gaz Sensörü</span>
+          <span style="font-size:12px; font-weight:600;" data-i18n="gas_sensor">Gaz Sensörü</span>
         </div>
       </div>
     </div>
@@ -612,7 +829,7 @@
           <span data-i18n="ble_conn">Bluetooth Bağlantısı & Güvenlik</span>
         </div>
       </div>
-      <button type="button" class="womo-btn-action active-magenta" onclick="openBleModal()" style="color:#ffffff !important; margin-bottom:12px;">
+      <button type="button" class="womo-btn-action active-orange" onclick="openBleModal()" style="color:#ffffff !important; margin-bottom:12px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
         <span data-i18n="ble_modal_title" style="color:#ffffff !important;">Bluetooth Bağlantı Merkezi</span>
       </button>
@@ -621,8 +838,8 @@
       <div style="background:var(--bg-control); border-radius:14px; padding:14px; margin-bottom:8px;">
         <div class="param-label" style="margin-bottom:8px;" data-i18n="ble_sec_pin">Bluetooth Güvenlik Şifresi (PIN)</div>
         <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:8px;">
-          <input type="password" id="inputOldBlePin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff; text-align:center;">
-          <input type="password" id="inputNewBlePin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff; text-align:center;">
+          <input type="password" id="inputOldBlePin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" data-i18n-ph="ble_cur_pin" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:var(--text-primary); text-align:center;">
+          <input type="password" id="inputNewBlePin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" data-i18n-ph="ble_new_pin" style="width:100%; box-sizing:border-box; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:var(--text-primary); text-align:center;">
         </div>
         <button type="button" class="womo-btn-action" onclick="degistirBlePinDirect()" style="background:var(--bg-track); font-size:12px; padding:10px;">
           <span data-i18n="ble_chg_btn">PIN'i Değiştir</span>
@@ -661,7 +878,7 @@
                 <div style="font-size:11px; color:var(--text-muted);" id="lbl_current_theme" data-i18n="dark_mode">Karanlık Mod</div>
               </div>
               <div style="display:flex; background:var(--bg-track); border-radius:10px; padding:3px; gap:4px; border:1px solid var(--border-card);">
-                <button type="button" id="btn_theme_dark" onclick="setAppTheme('dark')" style="padding:6px 12px; border-radius:8px; border:none; font-size:12px; font-weight:600; cursor:pointer; background:var(--accent-magenta); color:#fff; display:flex; align-items:center; gap:4px; transition:all 0.2s;">
+                <button type="button" id="btn_theme_dark" onclick="setAppTheme('dark')" style="padding:6px 12px; border-radius:8px; border:none; font-size:12px; font-weight:600; cursor:pointer; background:var(--accent-orange); color:#fff; display:flex; align-items:center; gap:4px; transition:all 0.2s;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                   <span data-i18n="theme_dark">Karanlık</span>
                 </button>
@@ -678,21 +895,21 @@
             <div class="param-label" style="margin-bottom:8px;" data-i18n="tanks">Tank Ayarları</div>
             <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_s_temiz" checked> <span data-i18n="show_fresh">Temiz Su Göster</span></label>
             <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_s_gri" checked> <span data-i18n="show_grey">Gri Su Göster</span></label>
-            <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_h_koruma" checked> <span data-i18n="dry_run_prot">Hidrofor Susuz Koruma</span></label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:8px;"><input type="checkbox" id="cfg_h_koruma" checked> <span data-i18n="cfg_dry_run_prot">Hidrofor Susuz Koruma</span></label>
             <select id="cfg_p_tip" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px;">
-              <option value="4_level">4 Kademeli Prob</option>
-              <option value="single">Tek Şamandıra</option>
+              <option value="4_level" data-i18n="probe_4_level">4 Kademeli Prob</option>
+              <option value="single" data-i18n="probe_single">Tek Şamandıra</option>
             </select>
           </div>
 
           <!-- Akü Ayarları -->
           <div style="background:var(--bg-control); border-radius:14px; padding:12px;">
             <div class="param-label" style="margin-bottom:8px;" data-i18n="battery_settings">Akü Ayarları</div>
-            <select id="cfg_aku_tipi" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:8px;">
-              <option value="lifepo4">LiFePO4 (Lityum)</option>
-              <option value="agm">AGM</option>
-              <option value="gel">Jel</option>
-              <option value="lead">Kurşun-Asit</option>
+            <select id="cfg_aku_tipi" onchange="updateBatteryDialType(this.value)" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:8px;">
+              <option value="lifepo4" data-i18n="bat_type_lifepo4">LiFePO4 (Lityum)</option>
+              <option value="agm" data-i18n="bat_type_agm">AGM</option>
+              <option value="gel" data-i18n="bat_type_gel">Jel</option>
+              <option value="lead" data-i18n="bat_type_lead">Kurşun-Asit</option>
             </select>
             <input type="number" id="cfg_aku_kapasite" value="100" placeholder="Kapasite (Ah)" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; margin-bottom:10px;">
 
@@ -705,7 +922,7 @@
               <label style="background:var(--bg-track); padding:8px 4px; border-radius:8px; font-size:11px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;"><input type="radio" name="aku_yontem" value="manuel" onclick="toggleManuel(true)"> <span data-i18n="manual_val">Manuel</span></label>
             </div>
             <div id="manuelDiv" style="display:none;">
-              <input type="number" id="cfg_aku_manuel_yuzde" placeholder="Manuel Yüzde (%0 - %100)" min="0" max="100" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; text-align:center;">
+              <input type="number" id="cfg_aku_manuel_yuzde" placeholder="Manuel Yüzde (%0 - %100)" min="0" max="100" data-i18n-ph="manual_pct_ph" style="width:100%; background:var(--bg-track); color:#fff; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; text-align:center;">
             </div>
           </div>
 
@@ -738,7 +955,7 @@
           </div>
 
           <!-- Kaydet Butonu -->
-          <button type="submit" class="womo-btn-action active-magenta" style="color:#ffffff !important; padding:14px; font-size:15px; margin-top:4px;">
+          <button type="submit" class="womo-btn-action active-orange" style="color:#ffffff !important; padding:14px; font-size:15px; margin-top:4px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <span data-i18n="save_settings" style="color:#ffffff !important;">Ayarları Kaydet</span>
           </button>
@@ -753,7 +970,7 @@
   <nav class="womo-bottom-bar">
     <div class="womo-tab active" onclick="switchWomoTab('tab-energy')" id="tabBtn-energy">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      <span data-i18n="womo_tab_energy">Genel Bakış</span>
+      <span data-i18n="womo_tab_energy">Enerji & Durum</span>
     </div>
     <div class="womo-tab" onclick="switchWomoTab('tab-light')" id="tabBtn-light">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -808,7 +1025,7 @@
     <div class="ble-info-card">
       <div class="ble-info-row">
         <span class="param-label" data-i18n="ble_target">HEDEF CİHAZ</span>
-        <span style="font-weight:700; color:#fff;">Karavan_BLE</span>
+        <span style="font-weight:700; color:var(--text-primary);">Karavan_BLE</span>
       </div>
       <div class="ble-info-row">
         <span class="param-label" data-i18n="ble_sec">GÜVENLİK</span>
@@ -822,7 +1039,7 @@
 
     <!-- Dinamik Butonlar -->
     <div id="bleModalActions">
-      <button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action active-magenta">
+      <button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action active-orange">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
         <span data-i18n="ble_connect_btn">Karavana Bağlan</span>
       </button>
@@ -844,14 +1061,14 @@
 
     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
       <div id="oldPinRow" style="display:none;">
-        <input type="password" id="modalOldPin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_cur_pin">
+        <input type="password" id="modalOldPin" placeholder="Mevcut PIN" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:var(--text-primary);" data-i18n-ph="ble_cur_pin">
       </div>
-      <input type="password" id="modalNewPin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_new_pin">
-      <input type="password" id="modalNewPin2" placeholder="Yeni PIN (Tekrar)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:#fff;" data-i18n-ph="ble_new_pin_repeat">
+      <input type="password" id="modalNewPin" placeholder="Yeni PIN (6 hane)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:var(--text-primary);" data-i18n-ph="ble_new_pin">
+      <input type="password" id="modalNewPin2" placeholder="Yeni PIN (Tekrar)" maxlength="6" pattern="[0-9]*" inputmode="numeric" style="width:100%; text-align:center; letter-spacing:4px; font-size:16px; background:var(--bg-track); border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:10px; color:var(--text-primary);" data-i18n-ph="ble_new_pin_repeat">
     </div>
 
     <div style="display:flex; flex-direction:column; gap:8px;">
-      <button type="button" onclick="submitBlePinChange()" class="womo-btn-action active-magenta" data-i18n="ble_btn_save_pin">Şifreyi Güncelle</button>
+      <button type="button" onclick="submitBlePinChange()" class="womo-btn-action active-orange" data-i18n="ble_btn_save_pin">Şifreyi Güncelle</button>
       <button type="button" onclick="document.getElementById('ble-pin-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track);" data-i18n="ble_btn_remind_later">Daha Sonra Hatırlat</button>
     </div>
   </div>
@@ -876,10 +1093,11 @@
 <!-- ALARM ŞİFRE MODALI -->
 <div id="pass-modal" class="modal-overlay" style="z-index:100005;">
   <div class="modal-box">
-    <h3 id="pass-modal-title" style="margin:0 0 15px 0; color:var(--text-primary);" data-i18n="disarm_alarm_title">Alarmı Kapat</h3>
-    <input type="password" id="alarmInputPass" placeholder="Şifre" data-i18n-ph="pin_ph" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; background:var(--bg-control); color:#fff; text-align:center; letter-spacing:4px; font-size:18px; box-sizing:border-box;">
+    <h3 id="pass-modal-title" style="margin:0 0 10px 0; color:var(--text-primary);" data-i18n="disarm_alarm_title">Alarmı Kapat</h3>
+    <div id="pass-modal-time" style="font-size:12px; color:#EF4444; font-weight:700; margin-bottom:12px; display:none;"></div>
+    <input type="password" id="alarmInputPass" placeholder="Şifre" data-i18n-ph="pin_ph" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.08); border-radius:12px; background:var(--bg-control); color:var(--text-primary); text-align:center; letter-spacing:4px; font-size:18px; box-sizing:border-box;">
     <div style="display:flex; gap:10px;">
-      <button type="button" onclick="sifreGonder()" class="womo-btn-action active-magenta" style="flex:1;" data-i18n="btn_confirm">Onayla</button>
+      <button type="button" onclick="sifreGonder()" class="womo-btn-action active-orange" style="flex:1;" data-i18n="btn_confirm">Onayla</button>
       <button type="button" onclick="document.getElementById('pass-modal').style.display='none'" class="womo-btn-action" style="background:var(--bg-track); flex:1;" data-i18n="btn_cancel">İptal</button>
     </div>
   </div>
@@ -891,7 +1109,7 @@
     <div id="alertIcon" style="margin-bottom:15px;"></div>
     <h3 style="margin:0 0 10px 0; color:var(--text-primary); font-size:16px;" id="alertTitle" data-i18n="warning">Uyarı</h3>
     <p style="margin:0 0 20px 0; font-size:13px; color:var(--text-muted);" id="alertMsg">Mesaj</p>
-    <button type="button" onclick="document.getElementById('alert-modal').style.display='none'" class="womo-btn-action active-magenta" data-i18n="ok">Tamam</button>
+    <button type="button" onclick="document.getElementById('alert-modal').style.display='none'" class="womo-btn-action active-orange" data-i18n="ok">Tamam</button>
   </div>
 </div>
 
@@ -917,6 +1135,17 @@ var I18N = {
   tr: {
     system_status: "SİSTEM DURUMU",
     system_switch: "Ana Şalter",
+    system_turn_on: "Sistemi Aç",
+    system_turn_off: "Sistemi Kapat",
+    system_active: "Sistem Devrede",
+    system_inactive: "Sistem Kapalı",
+    badge_on: "AÇIK",
+    badge_off: "KAPALI",
+    inverter_on: "İnvertör Açık (220V Aktif)",
+    inverter_off: "İnvertör Kapalı",
+    pump_on: "Su Pompası Açık (Aktif)",
+    pump_off: "Su Pompası Kapalı",
+    lithium_battery: "LİTYUM AKÜ",
     relay_settings: "Röle Kontrolleri",
     pwm_settings: "Dimmer Aydınlatma",
     battery_card: "Akü Durumu (Junctek)",
@@ -1007,16 +1236,47 @@ var I18N = {
     msg_timer_set: "dakika sonra kapanacak.",
     msg_err: "Hata",
     msg_err_pin: "Girdiğiniz şifre hatalı!",
-    msg_pump_prot: "Hidrofor Koruması",
-    msg_pump_empty: "Temiz su deponuz boş olduğu için pompa açılamaz!",
+    msg_pump_prot: "Susuz Çalıştırma Koruması",
+    msg_pump_empty: "Temiz su deposu boş olduğu için su pompası çalıştırılamaz!",
+    cfg_dry_run_prot: "Hidrofor Susuz Koruma",
+    probe_4_level: "4 Kademeli Prob",
+    probe_single: "Tek Şamandıra",
+    bat_type_lifepo4: "LiFePO4 (Lityum)",
+    bat_type_agm: "AGM",
+    bat_type_gel: "Jel",
+    bat_type_lead: "Kurşun-Asit",
+    manual_pct_ph: "Manuel Yüzde (%0 - %100)",
+    door_window: "Kapı / Pencere",
+    gas_sensor: "Gaz Sensörü",
+    alarm_state_off_title: "Alarm Kapalı",
+    alarm_state_off_sub: "Sistem devrede değil",
+    alarm_state_exit_title: "Çıkış Bekleniyor",
+    alarm_state_exit_sub: "{t} sn içinde çıkın",
+    alarm_state_armed_title: "Alarm Kurulu",
+    alarm_state_armed_sub: "Güvendesiniz",
+    alarm_state_entry_title: "Giriş Algılandı!",
+    alarm_state_entry_sub: "{t} sn içinde şifre girin!",
+    alarm_state_trigger_title: "ALARM ÇALIYOR!",
+    alarm_state_trigger_sub: "Siren devrede!",
+    tank_full: "Dolu",
+    tank_normal: "Normal",
+    tank_empty: "Boş",
+    tank_drain: "Dolu (Boşaltın)",
     msg_sys_off: "Sistem Kapalı",
     msg_sys_off_desc: "Sistem kapalıyken cihaz açılamaz.",
     solar_states: ["Kapalı", "", "Arıza", "Bulk", "Absorpsiyon", "Float"],
     womo_tab_light: "Aydınlatma",
-    womo_tab_energy: "Enerji",
+    womo_tab_energy: "Enerji & Durum",
     womo_tab_water: "Su & Tank",
     womo_tab_climate: "İklim & Alarm",
     womo_tab_settings: "Ayarlar",
+    alarm_detected_at: "Algılanma Saati:",
+    alarm_state_muted_title: "Giriş Algılandı (Siren Susturuldu)",
+    alarm_state_muted_sub: "5 dk süre doldu, siren sustu. Şifre girin!",
+    weather_clear_night: "Açık Gece",
+    weather_sunny: "Güneşli",
+    weather_cool: "Serin / Bulutlu",
+    weather_partly_cloudy: "Parçalı Bulutlu",
     lang_and_theme: "Dil ve Temalar",
     theme_lbl: "Tema Seçimi",
     theme_dark: "Karanlık",
@@ -1027,6 +1287,17 @@ var I18N = {
   en: {
     system_status: "SYSTEM STATUS",
     system_switch: "Master Switch",
+    system_turn_on: "Turn System On",
+    system_turn_off: "Turn System Off",
+    system_active: "System Active",
+    system_inactive: "System Inactive",
+    badge_on: "ON",
+    badge_off: "OFF",
+    inverter_on: "Inverter On (220V Active)",
+    inverter_off: "Inverter Off",
+    pump_on: "Water Pump On (Active)",
+    pump_off: "Water Pump Off",
+    lithium_battery: "LITHIUM BATTERY",
     relay_settings: "Relay Controls",
     pwm_settings: "Dimmer Lighting",
     battery_card: "Battery Status (Junctek)",
@@ -1117,16 +1388,47 @@ var I18N = {
     msg_timer_set: "minutes to turn off.",
     msg_err: "Error",
     msg_err_pin: "Incorrect PIN!",
-    msg_pump_prot: "Pump Protection",
-    msg_pump_empty: "Cannot start pump, fresh water tank is empty!",
+    msg_pump_prot: "Dry Run Protection",
+    msg_pump_empty: "Fresh water tank is empty, water pump cannot run!",
+    cfg_dry_run_prot: "Pump Dry Run Protection",
+    probe_4_level: "4-Level Sensor Probe",
+    probe_single: "Single Float Switch",
+    bat_type_lifepo4: "LiFePO4 (Lithium)",
+    bat_type_agm: "AGM",
+    bat_type_gel: "Gel",
+    bat_type_lead: "Lead-Acid",
+    manual_pct_ph: "Manual Percentage (0% - 100%)",
+    door_window: "Door / Window",
+    gas_sensor: "Gas Sensor",
+    alarm_state_off_title: "Alarm Disarmed",
+    alarm_state_off_sub: "System not active",
+    alarm_state_exit_title: "Exit Delay",
+    alarm_state_exit_sub: "Exit within {t} sec",
+    alarm_state_armed_title: "Alarm Armed",
+    alarm_state_armed_sub: "You are safe",
+    alarm_state_entry_title: "Entry Detected!",
+    alarm_state_entry_sub: "Enter PIN within {t} sec!",
+    alarm_state_trigger_title: "ALARM SOUNDING!",
+    alarm_state_trigger_sub: "Siren active!",
+    tank_full: "Full",
+    tank_normal: "Normal",
+    tank_empty: "Empty",
+    tank_drain: "Full (Drain)",
     msg_sys_off: "System Off",
     msg_sys_off_desc: "Cannot operate devices while system is off.",
     solar_states: ["Off", "", "Fault", "Bulk", "Absorption", "Float"],
     womo_tab_light: "Lighting",
-    womo_tab_energy: "Energy",
+    womo_tab_energy: "Energy & Status",
     womo_tab_water: "Water & Tanks",
     womo_tab_climate: "Climate & Alarm",
     womo_tab_settings: "Settings",
+    alarm_detected_at: "Detected At:",
+    alarm_state_muted_title: "Entry Detected (Siren Muted)",
+    alarm_state_muted_sub: "5 min timeout reached, siren muted. Enter PIN!",
+    weather_clear_night: "Clear Night",
+    weather_sunny: "Sunny",
+    weather_cool: "Cool / Cloudy",
+    weather_partly_cloudy: "Partly Cloudy",
     lang_and_theme: "Language & Themes",
     theme_lbl: "Theme Selection",
     theme_dark: "Dark",
@@ -1137,6 +1439,17 @@ var I18N = {
   de: {
     system_status: "SYSTEMSTATUS",
     system_switch: "Hauptschalter",
+    system_turn_on: "System einschalten",
+    system_turn_off: "System ausschalten",
+    system_active: "System Aktiv",
+    system_inactive: "System Aus",
+    badge_on: "EIN",
+    badge_off: "AUS",
+    inverter_on: "Wechselrichter Ein (220V Aktiv)",
+    inverter_off: "Wechselrichter Aus",
+    pump_on: "Wasserpumpe Ein (Aktiv)",
+    pump_off: "Wasserpumpe Aus",
+    lithium_battery: "LITHIUM-BATTERIE",
     relay_settings: "Relaissteuerung",
     pwm_settings: "Dimmer Beleuchtung",
     battery_card: "Batteriestatus (Junctek)",
@@ -1227,16 +1540,47 @@ var I18N = {
     msg_timer_set: "Minuten bis Aus.",
     msg_err: "Fehler",
     msg_err_pin: "Falsche PIN!",
-    msg_pump_prot: "Pumpenschutz",
-    msg_pump_empty: "Pumpe blockiert, Wassertank ist leer!",
+    msg_pump_prot: "Trockenlaufschutz",
+    msg_pump_empty: "Frischwassertank ist leer, Wasserpumpe kann nicht gestartet werden!",
+    cfg_dry_run_prot: "Pumpen-Trockenlaufschutz",
+    probe_4_level: "4-Stufen Sonde",
+    probe_single: "Einzelschwimmer",
+    bat_type_lifepo4: "LiFePO4 (Lithium)",
+    bat_type_agm: "AGM",
+    bat_type_gel: "Gel",
+    bat_type_lead: "Blei-Säure",
+    manual_pct_ph: "Manuelle Prozent (0% - 100%)",
+    door_window: "Tür / Fenster",
+    gas_sensor: "Gassensor",
+    alarm_state_off_title: "Alarm Deaktiviert",
+    alarm_state_off_sub: "System nicht aktiv",
+    alarm_state_exit_title: "Ausgangsverzögerung",
+    alarm_state_exit_sub: "In {t} Sek. verlassen",
+    alarm_state_armed_title: "Alarm Scharf",
+    alarm_state_armed_sub: "Sie sind geschützt",
+    alarm_state_entry_title: "Eingang Erkannt!",
+    alarm_state_entry_sub: "In {t} Sek. PIN eingeben!",
+    alarm_state_trigger_title: "ALARM AKTIV!",
+    alarm_state_trigger_sub: "Sirene aktiv!",
+    tank_full: "Voll",
+    tank_normal: "Normal",
+    tank_empty: "Leer",
+    tank_drain: "Voll (Entleeren)",
     msg_sys_off: "System Aus",
     msg_sys_off_desc: "Geräte blockiert, System ist aus.",
     solar_states: ["Aus", "", "Fehler", "Bulk", "Absorption", "Float"],
     womo_tab_light: "Licht",
-    womo_tab_energy: "Energie",
+    womo_tab_energy: "Energie & Status",
     womo_tab_water: "Wasser",
     womo_tab_climate: "Klima",
     womo_tab_settings: "System",
+    alarm_detected_at: "Erkannt um:",
+    alarm_state_muted_title: "Zutritt erkannt (Sirene stumm)",
+    alarm_state_muted_sub: "5 Min. Frist abgelaufen, Sirene stumm. PIN eingeben!",
+    weather_clear_night: "Klare Nacht",
+    weather_sunny: "Sonnig",
+    weather_cool: "Kühl / Bewölkt",
+    weather_partly_cloudy: "Teils Bewölkt",
     lang_and_theme: "Sprache & Themen",
     theme_lbl: "Themenauswahl",
     theme_dark: "Dunkel",
@@ -1247,6 +1591,17 @@ var I18N = {
   es: {
     system_status: "ESTADO SISTEMA",
     system_switch: "Interruptor Maestro",
+    system_turn_on: "Encender Sistema",
+    system_turn_off: "Apagar Sistema",
+    system_active: "Sistema Activo",
+    system_inactive: "Sistema Apagado",
+    badge_on: "ON",
+    badge_off: "OFF",
+    inverter_on: "Inversor Encendido (220V)",
+    inverter_off: "Inversor Apagado",
+    pump_on: "Bomba de Agua Encendida",
+    pump_off: "Bomba de Agua Apagada",
+    lithium_battery: "BATERÍA DE LITIO",
     relay_settings: "Control de Relés",
     pwm_settings: "Atenuadores LED",
     battery_card: "Batería (Junctek)",
@@ -1337,16 +1692,47 @@ var I18N = {
     msg_timer_set: "minutos para apagar.",
     msg_err: "Error",
     msg_err_pin: "PIN incorrecto!",
-    msg_pump_prot: "Prot. Bomba",
-    msg_pump_empty: "Bomba bloqueada, depósito vacío!",
+    msg_pump_prot: "Protección en Seco",
+    msg_pump_empty: "¡El depósito de agua limpia está vacío, no se puede encender la bomba!",
+    cfg_dry_run_prot: "Protección Bomba en Seco",
+    probe_4_level: "Sonda de 4 Niveles",
+    probe_single: "Flotador Simple",
+    bat_type_lifepo4: "LiFePO4 (Litio)",
+    bat_type_agm: "AGM",
+    bat_type_gel: "Gel",
+    bat_type_lead: "Plomo-Ácido",
+    manual_pct_ph: "Porcentaje Manual (0% - 100%)",
+    door_window: "Puerta / Ventana",
+    gas_sensor: "Sensor de Gas",
+    alarm_state_off_title: "Alarma Desarmada",
+    alarm_state_off_sub: "Sistema inactivo",
+    alarm_state_exit_title: "Esperando Salida",
+    alarm_state_exit_sub: "Salga en {t} seg",
+    alarm_state_armed_title: "Alarma Armada",
+    alarm_state_armed_sub: "Está protegido",
+    alarm_state_entry_title: "¡Entrada Detectada!",
+    alarm_state_entry_sub: "¡Ingrese PIN en {t} seg!",
+    alarm_state_trigger_title: "¡ALARMA SONANDO!",
+    alarm_state_trigger_sub: "¡Sirena activa!",
+    tank_full: "Lleno",
+    tank_normal: "Normal",
+    tank_empty: "Vacío",
+    tank_drain: "Lleno (Vaciar)",
     msg_sys_off: "Sistema Apagado",
     msg_sys_off_desc: "Sistema apagado.",
     solar_states: ["Apagado", "", "Fallo", "Bulk", "Absorción", "Flotación"],
     womo_tab_light: "Luces",
-    womo_tab_energy: "Energía",
+    womo_tab_energy: "Energía y Estado",
     womo_tab_water: "Agua",
     womo_tab_climate: "Clima",
     womo_tab_settings: "Ajustes",
+    alarm_detected_at: "Detectado a las:",
+    alarm_state_muted_title: "Entrada detectada (Sirena silenciada)",
+    alarm_state_muted_sub: "Límite de 5 min cumplido. ¡Ingrese PIN!",
+    weather_clear_night: "Noche Despejada",
+    weather_sunny: "Soleado",
+    weather_cool: "Fresco / Nublado",
+    weather_partly_cloudy: "Parcialmente Nublado",
     lang_and_theme: "Idioma y Temas",
     theme_lbl: "Selección de Tema",
     theme_dark: "Oscuro",
@@ -1357,6 +1743,17 @@ var I18N = {
   it: {
     system_status: "STATO SISTEMA",
     system_switch: "Interruttore Principale",
+    system_turn_on: "Accendi Sistema",
+    system_turn_off: "Spegni Sistema",
+    system_active: "Sistema Attivo",
+    system_inactive: "Sistema Spento",
+    badge_on: "ACCESO",
+    badge_off: "SPENTO",
+    inverter_on: "Inverter Acceso (220V)",
+    inverter_off: "Inverter Spento",
+    pump_on: "Pompa Acqua Accesa",
+    pump_off: "Pompa Acqua Spenta",
+    lithium_battery: "BATTERIA AL LITIO",
     relay_settings: "Controllo Relè",
     pwm_settings: "Dimmer Illuminazione",
     battery_card: "Batteria (Junctek)",
@@ -1447,16 +1844,47 @@ var I18N = {
     msg_timer_set: "minuti allo spegnimento.",
     msg_err: "Errore",
     msg_err_pin: "PIN errato!",
-    msg_pump_prot: "Protezione Pompa",
-    msg_pump_empty: "Pompa bloccata, serbatoio vuoto!",
+    msg_pump_prot: "Protezione a Secco",
+    msg_pump_empty: "Il serbatoio dell'acqua pulita è vuoto, la pompa non può essere avviata!",
+    cfg_dry_run_prot: "Protezione Pompa a Secco",
+    probe_4_level: "Sonda a 4 Livelli",
+    probe_single: "Galleggiante Singolo",
+    bat_type_lifepo4: "LiFePO4 (Litio)",
+    bat_type_agm: "AGM",
+    bat_type_gel: "Gel",
+    bat_type_lead: "Piombo-Acido",
+    manual_pct_ph: "Percentuale Manuale (0% - 100%)",
+    door_window: "Porta / Finestra",
+    gas_sensor: "Sensore di Gas",
+    alarm_state_off_title: "Allarme Disattivato",
+    alarm_state_off_sub: "Sistema non attivo",
+    alarm_state_exit_title: "Attesa Uscita",
+    alarm_state_exit_sub: "Esci entro {t} sec",
+    alarm_state_armed_title: "Allarme Inserito",
+    alarm_state_armed_sub: "Sei al sicuro",
+    alarm_state_entry_title: "Ingresso Rilevato!",
+    alarm_state_entry_sub: "Inserisci PIN entro {t} sec!",
+    alarm_state_trigger_title: "ALLARME IN CORSO!",
+    alarm_state_trigger_sub: "Sirena attiva!",
+    tank_full: "Pieno",
+    tank_normal: "Normale",
+    tank_empty: "Vuoto",
+    tank_drain: "Pieno (Svuotare)",
     msg_sys_off: "Sistema Spento",
     msg_sys_off_desc: "Sistema spento.",
     solar_states: ["Spento", "", "Guasto", "Bulk", "Assorbimento", "Float"],
     womo_tab_light: "Luci",
-    womo_tab_energy: "Energia",
+    womo_tab_energy: "Energia e Stato",
     womo_tab_water: "Acqua",
     womo_tab_climate: "Clima",
     womo_tab_settings: "Sistema",
+    alarm_detected_at: "Rilevato alle:",
+    alarm_state_muted_title: "Intrusione Rilevata (Sirena silenziata)",
+    alarm_state_muted_sub: "Limite di 5 min raggiunto. Inserisci PIN!",
+    weather_clear_night: "Notte Serena",
+    weather_sunny: "Soleggiato",
+    weather_cool: "Fresco / Nuvoloso",
+    weather_partly_cloudy: "Parzialmente Nuvoloso",
     lang_and_theme: "Lingua e Temi",
     theme_lbl: "Selezione Tema",
     theme_dark: "Scuro",
@@ -1473,6 +1901,8 @@ var currentTimerId = '';
 var rT, isRLP = false;
 var gAlarmState = 0;
 var gAlarmSure = 0;
+var gAlarmTriggerTime = localStorage.getItem('karavan_alarm_trigger_time') || '';
+var isSirenMuted = false;
 var lastStatusData = null;
 
 var defaultRelayNames = [
@@ -1515,6 +1945,24 @@ function switchWomoTab(tabId) {
 }
 
 // ==========================================
+// AKÜ TİPİ KADRAN GÜNCELLEME
+// ==========================================
+function updateBatteryDialType(tip) {
+  var el = document.getElementById('lbl_lithium');
+  if (!el) return;
+  var map = {
+    'lifepo4': 'LiFePO4',
+    'agm': 'AGM',
+    'gel': 'GEL',
+    'lead': 'LEAD'
+  };
+  var cleanTip = (tip || '').toLowerCase().trim();
+  var label = map[cleanTip] || 'LiFePO4';
+  el.textContent = label;
+  try { el.innerText = label; } catch(e){}
+}
+
+// ==========================================
 // DİL UYGULAMA (I18N)
 // ==========================================
 function applyLanguage(lang) {
@@ -1525,7 +1973,14 @@ function applyLanguage(lang) {
   var dict = I18N[lang];
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
-    if (dict[key]) el.innerHTML = dict[key];
+    if (dict[key]) {
+      if (el.tagName === 'OPTION') {
+        el.text = dict[key];
+        el.textContent = dict[key];
+      } else {
+        el.innerHTML = dict[key];
+      }
+    }
   });
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
     var key = el.getAttribute('data-i18n-ph');
@@ -1535,8 +1990,17 @@ function applyLanguage(lang) {
   var sysDilInput = document.getElementById('sys_dil');
   if (sysDilInput) sysDilInput.value = lang;
 
+  var currentAkuTipi = (document.getElementById('cfg_aku_tipi') ? document.getElementById('cfg_aku_tipi').value : null) || localStorage.getItem('karavan_aku_tipi') || (lastConfigData ? lastConfigData.atip : null) || 'lifepo4';
+  updateBatteryDialType(currentAkuTipi);
+  updateLiveClock();
+
   updateThemeButtonsUI(document.body.classList.contains('light-mode') ? 'light' : 'dark');
-  updateAlarmUI(gAlarmState, gAlarmSure);
+  updateAlarmUI(gAlarmState, gAlarmSure, isSirenMuted);
+  updateSystemSwitchUI(isSystemOn);
+  var invState = (lastStatusData && lastStatusData.r && lastStatusData.r[1] == 1);
+  updateInverterUI(invState);
+  var pumpState = (lastStatusData && lastStatusData.r && lastStatusData.r[0] == 1);
+  updatePumpUI(pumpState);
   if (lastStatusData) paintStatus(lastStatusData);
 }
 
@@ -1557,7 +2021,7 @@ function setAppTheme(theme) {
   } else {
     document.body.classList.add('light-mode');
     var metaTh = document.querySelector('meta[name="theme-color"]');
-    if (metaTh) metaTh.setAttribute('content', '#F0F2F5');
+    if (metaTh) metaTh.setAttribute('content', '#F5F7FB');
   }
   try {
     localStorage.setItem('karavan_theme', theme);
@@ -1574,18 +2038,22 @@ function updateThemeButtonsUI(theme) {
 
   if (bDark && bLight) {
     if (isDark) {
-      bDark.style.background = 'var(--accent-magenta)';
+      bDark.style.background = 'var(--accent-gradient)';
+      bDark.style.boxShadow = '0 4px 14px var(--accent-primary-glow)';
       bDark.style.color = '#FFFFFF';
       bDark.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
       bLight.style.background = 'transparent';
+      bLight.style.boxShadow = 'none';
       bLight.style.color = 'var(--text-muted)';
       bLight.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
       if (lblTheme) lblTheme.innerText = dict.dark_mode || 'Karanlık Mod';
     } else {
-      bLight.style.background = 'var(--accent-magenta)';
+      bLight.style.background = 'var(--accent-gradient)';
+      bLight.style.boxShadow = '0 4px 14px var(--accent-primary-glow)';
       bLight.style.color = '#FFFFFF';
       bLight.querySelectorAll('*').forEach(function(el){ el.style.color = '#FFFFFF'; el.style.stroke = '#FFFFFF'; });
       bDark.style.background = 'transparent';
+      bDark.style.boxShadow = 'none';
       bDark.style.color = 'var(--text-muted)';
       bDark.querySelectorAll('*').forEach(function(el){ el.style.color = 'var(--text-muted)'; el.style.stroke = 'currentColor'; });
       if (lblTheme) lblTheme.innerText = dict.light_mode || 'Aydınlık Mod';
@@ -1700,7 +2168,7 @@ function updateBleModalUI() {
     telemSt.innerText = "Hazır";
     telemSt.style.color = "var(--text-primary)";
 
-    actions.innerHTML = '<button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action" style="background:var(--accent-magenta);">' +
+    actions.innerHTML = '<button type="button" id="btnBleModalConnect" onclick="startBleFromModal()" class="womo-btn-action active-orange" style="background:var(--accent-orange);">' +
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>' +
       '<span>' + dict.ble_connect_btn + '</span>' +
     '</button>' +
@@ -2082,35 +2550,117 @@ function degistirBlePin() {
 }
 
 // ==========================================
+// DİNAMİK ARAYÜZ GÜNCELLEME YARDIMCILARI (ÇOK DİLLİ)
+// ==========================================
+function updateSystemSwitchUI(isSys) {
+  var dict = I18N[currentLang] || I18N.tr;
+  var btnSys = document.getElementById('card_sistem');
+  var txtSys = document.getElementById('st_sistem_text');
+  var lblBtn = document.getElementById('st_sistem');
+  var badgeSys = document.getElementById('badge_sistem');
+  var iconSysBox = document.getElementById('icon_sistem_box');
+
+  if (isSys) {
+    if (btnSys) {
+      btnSys.classList.add('active-orange');
+      btnSys.classList.remove('active-magenta');
+    }
+    if (lblBtn) lblBtn.innerText = dict.system_turn_off || "Sistemi Kapat";
+    if (txtSys) txtSys.innerText = dict.system_active || "Sistem Devrede";
+    if (badgeSys) {
+      badgeSys.innerText = dict.badge_on || "AÇIK";
+      badgeSys.style.background = "rgba(16, 185, 129, 0.15)";
+      badgeSys.style.color = "#10B981";
+    }
+    if (iconSysBox) {
+      iconSysBox.style.background = "linear-gradient(135deg, #10B981, #059669)";
+      iconSysBox.style.color = "#ffffff";
+    }
+  } else {
+    if (btnSys) {
+      btnSys.classList.remove('active-orange');
+      btnSys.classList.remove('active-magenta');
+    }
+    if (lblBtn) lblBtn.innerText = dict.system_turn_on || "Sistemi Aç";
+    if (txtSys) txtSys.innerText = dict.system_inactive || "Sistem Kapalı";
+    if (badgeSys) {
+      badgeSys.innerText = dict.badge_off || "KAPALI";
+      badgeSys.style.background = "var(--bg-track)";
+      badgeSys.style.color = "var(--text-secondary)";
+    }
+    if (iconSysBox) {
+      iconSysBox.style.background = "var(--bg-track)";
+      iconSysBox.style.color = "var(--text-muted)";
+    }
+  }
+}
+
+function updateInverterUI(on) {
+  var dict = I18N[currentLang] || I18N.tr;
+  var invBtn = document.getElementById('btn_inverter');
+  var invTxt = document.getElementById('st_inverter_btn');
+  if (invBtn) {
+    if (on) {
+      invBtn.classList.add('active-orange');
+      invBtn.classList.remove('active-magenta');
+      if (invTxt) invTxt.innerText = dict.inverter_on || "İnvertör Açık (220V Aktif)";
+    } else {
+      invBtn.classList.remove('active-orange');
+      invBtn.classList.remove('active-magenta');
+      if (invTxt) invTxt.innerText = dict.inverter_off || "İnvertör Kapalı";
+    }
+  }
+}
+
+function updatePumpUI(on) {
+  var dict = I18N[currentLang] || I18N.tr;
+  var pumpBtn = document.getElementById('btn_pump');
+  var pumpTxt = document.getElementById('st_pump_btn');
+  if (pumpBtn) {
+    if (on) {
+      pumpBtn.classList.remove('active-blue');
+      pumpBtn.classList.add('active-orange');
+      pumpBtn.classList.remove('active-magenta');
+      if (pumpTxt) pumpTxt.innerText = dict.pump_on || "Su Pompası Açık (Aktif)";
+    } else {
+      pumpBtn.classList.remove('active-orange');
+      pumpBtn.classList.remove('active-magenta');
+      pumpBtn.classList.remove('active-blue');
+      if (pumpTxt) pumpTxt.innerText = dict.pump_off || "Su Pompası Kapalı";
+    }
+  }
+}
+
+// ==========================================
 // ARAYÜZ BOYAMA VE VERİ GÜNCELLEME (STATUS)
 // ==========================================
 function paintStatus(res) {
-  // 1. Ana Sistem Şalteri
-  var isSys = (res.sistem === 'on' || res.sistem === true || res.sistem === 1);
-  isSystemOn = isSys;
-  var btnSys = document.getElementById('card_sistem');
-  var txtSys = document.getElementById('st_sistem_text');
+  if (!res) return;
   var dict = I18N[currentLang] || I18N.tr;
+  try {
+    // 1. Ana Sistem Şalteri (Çok Dilli Dinamik Durum)
+    var isSys = (res.sistem === 'on' || res.sistem === true || res.sistem === 1);
+    isSystemOn = isSys;
+    updateSystemSwitchUI(isSys);
 
-  if (btnSys) {
-    if (isSys) {
-      btnSys.classList.add('active-magenta');
-      if (txtSys) txtSys.innerText = dict.on;
-    } else {
-      btnSys.classList.remove('active-magenta');
-      if (txtSys) txtSys.innerText = dict.off;
+    // 1b. Dışarıdan 220V Şebeke Algılama
+    var has220 = (res.ac220 === 1 || res.ac220 === '1' || res.ac220 === true);
+    var el220 = document.getElementById('badge_220v');
+    if (el220) {
+      el220.style.display = has220 ? 'inline-flex' : 'none';
     }
-  }
 
   // 2. Röleler (r0 - r6)
   if (res.r) {
     for (var i = 0; i < 7; i++) {
       var tile = document.getElementById('card_r' + i);
       var stEl = document.getElementById('st_r' + i);
+      var swEl = document.getElementById('sw_r' + i);
       if (tile) {
         var on = (res.r[i] == 1);
         if (on) tile.classList.add('active');
         else tile.classList.remove('active');
+        if (swEl) swEl.innerText = on ? dict.on : dict.off;
         if (stEl) {
           var rtStr = (res.rt && res.rt[i] > 0) ? ' (' + res.rt[i] + 'm)' : '';
           stEl.innerText = (on ? dict.on : dict.off) + rtStr;
@@ -2119,35 +2669,9 @@ function paintStatus(res) {
     }
   }
 
-  // İnvertör Özel Durum Butonu (r1 - Fiziki Röle 2)
-  var invBtn = document.getElementById('btn_inverter');
-  var invTxt = document.getElementById('st_inverter_btn');
-  if (invBtn && res.r) {
-    var invOn = (res.r[1] == 1);
-    if (invOn) {
-      invBtn.classList.add('active-magenta');
-      if (invTxt) invTxt.innerText = "İnvertör Açık (220V Aktif)";
-    } else {
-      invBtn.classList.remove('active-magenta');
-      if (invTxt) invTxt.innerText = "İnvertör Kapalı";
-    }
-  }
+  var invOn = (res.r && res.r[1] == 1); updateInverterUI(invOn);
 
-  // Su Pompası Özel Durum Butonu (r0 - Fiziki Röle 1)
-  var pumpBtn = document.getElementById('btn_pump');
-  var pumpTxt = document.getElementById('st_pump_btn');
-  if (pumpBtn && res.r) {
-    var pumpOn = (res.r[0] == 1);
-    if (pumpOn) {
-      pumpBtn.classList.remove('active-blue');
-      pumpBtn.classList.add('active-magenta');
-      if (pumpTxt) pumpTxt.innerText = "Su Pompası Açık (Aktif)";
-    } else {
-      pumpBtn.classList.remove('active-magenta');
-      pumpBtn.classList.remove('active-blue');
-      if (pumpTxt) pumpTxt.innerText = "Su Pompası Kapalı";
-    }
-  }
+  var pumpOn = (res.r && res.r[0] == 1); updatePumpUI(pumpOn);
 
   // 3. Dimmerlar (p0 - p3)
   if (res.p) {
@@ -2168,37 +2692,45 @@ function paintStatus(res) {
   }
 
   // 4. Akü (Junctek)
+  if (res.atip) updateBatteryDialType(res.atip);
   if (res.aku_v !== undefined || res.aku_y !== undefined) {
     var bY = parseFloat(res.aku_y !== undefined ? res.aku_y : (res.ayuzde !== undefined ? res.ayuzde : 0)) || 0;
     var bCirc = document.getElementById('bat-circle');
     var bText = document.getElementById('bat-perc');
     if (bText) {
-      bText.textContent = '%' + Math.round(bY);
-      try { bText.innerText = '%' + Math.round(bY); } catch(e){}
+      bText.textContent = Math.round(bY);
+      try { bText.innerText = Math.round(bY); } catch(e){}
     }
     if (bCirc) {
       var dashoffset = 339.29 * (1 - (bY / 100));
+      bCirc.setAttribute('stroke-dasharray', '339.29');
       bCirc.setAttribute('stroke-dashoffset', dashoffset);
-      if (bY > 50) bCirc.setAttribute('stroke', '#C026D3');
+      if (bY > 50) bCirc.setAttribute('stroke', 'url(#dialGradient)');
       else if (bY > 20) bCirc.setAttribute('stroke', '#f59e0b');
-      else bCirc.setAttribute('stroke', '#ef4444');
+      else bCirc.setAttribute('stroke', '#EF4444');
     }
 
     if (document.getElementById('batteryVoltage')) document.getElementById('batteryVoltage').innerHTML = (res.aku_v || 0).toFixed(2) + '<span class="stat-unit">V</span>';
     if (document.getElementById('batteryWatts')) document.getElementById('batteryWatts').innerHTML = Math.round(Math.abs(res.aku_w || 0)) + '<span class="stat-unit">W</span>';
     if (document.getElementById('batteryAh')) document.getElementById('batteryAh').innerHTML = Math.round(res.aku_kalan_ah || 0) + '<span class="stat-unit">Ah</span>';
 
-    var curA = res.aku_a || 0;
+    var curA = parseFloat(res.aku_a) || 0;
     var flowEl = document.getElementById('batteryFlowText');
     if (flowEl) {
       var absI = Math.abs(curA);
       var strI = absI < 1.0 ? (absI * 1000).toFixed(0) + ' mA' : absI.toFixed(2) + ' A';
-      if (curA > 0.02) {
-        flowEl.innerHTML = '+' + strI; flowEl.style.color = '#22c55e';
-      } else if (curA < -0.02) {
-        flowEl.innerHTML = '-' + strI; flowEl.style.color = '#ef4444';
+      if (curA > 0.05) {
+        flowEl.innerHTML = '+' + strI;
+        flowEl.style.color = '#10B981'; // Pozitif akımda yeşil
+        flowEl.style.fontWeight = '700';
+      } else if (curA < -0.05) {
+        flowEl.innerHTML = '-' + strI;
+        flowEl.style.color = '#EF4444'; // Negatif akımda kırmızı
+        flowEl.style.fontWeight = '700';
       } else {
-        flowEl.innerHTML = '0.0<span class="stat-unit">A</span>'; flowEl.style.color = 'var(--text-muted)';
+        flowEl.innerHTML = '0.00 <span class="stat-unit">A</span>';
+        flowEl.style.color = 'var(--text-muted)';
+        flowEl.style.fontWeight = '600';
       }
     }
   }
@@ -2239,7 +2771,7 @@ function paintStatus(res) {
     }
     document.querySelectorAll('.arc-fill-temiz').forEach(function(x){ x.setAttribute('stroke-dashoffset', offsetT); });
     var lblT = document.getElementById('lbl_temiz_tank_st');
-    if (lblT) lblT.innerText = (tVal > 75) ? 'Dolu' : ((tVal > 25) ? 'Normal' : 'Boş');
+    if (lblT) lblT.innerText = (tVal > 75) ? (dict.tank_full || 'Dolu') : ((tVal > 25) ? (dict.tank_normal || 'Normal') : (dict.tank_empty || 'Boş'));
   }
   if (res.gri_su !== undefined || res.g_raw !== undefined) {
     var gVal = (res.gri_su !== undefined) ? parseInt(res.gri_su, 10) : 0;
@@ -2262,7 +2794,7 @@ function paintStatus(res) {
     }
     document.querySelectorAll('.arc-fill-gri').forEach(function(x){ x.setAttribute('stroke-dashoffset', offsetG); });
     var lblG = document.getElementById('lbl_gri_tank_st');
-    if (lblG) lblG.innerText = (gVal > 80) ? 'Dolu (Boşaltın)' : 'Normal';
+    if (lblG) lblG.innerText = (gVal > 80) ? (dict.tank_drain || 'Dolu (Boşaltın)') : (dict.tank_normal || 'Normal');
   }
 
   // 7. Sıcaklık & Nem
@@ -2282,7 +2814,8 @@ function paintStatus(res) {
   // 8. Alarm
   gAlarmState = res.al_st || 0;
   gAlarmSure = res.al_sure || 0;
-  updateAlarmUI(gAlarmState, gAlarmSure);
+  isSirenMuted = (res.al_sustu == 1 || res.al_sustu === true);
+  updateAlarmUI(gAlarmState, gAlarmSure, isSirenMuted);
 
   var isGaz = (res.gaz === true || res.gaz === 'true' || res.gaz === 1);
   if (!isGaz) isGasSilenced = false;
@@ -2297,37 +2830,82 @@ function paintStatus(res) {
     }
   }
 
-  if (isGaz || gAlarmState == 4) {
+  if (isGaz || (gAlarmState == 4 && !isSirenMuted)) {
     playTone(900, 'square', 0.5);
     setTimeout(function(){ playTone(700, 'square', 0.5); }, 500);
   }
 
-  if (res.h_raw !== undefined) document.getElementById('ind_h').style.background = (res.h_raw == 0) ? '#ef4444' : '#22c55e';
-  if (res.g_raw !== undefined) document.getElementById('ind_g').style.background = (res.g_raw == 0) ? '#ef4444' : '#22c55e';
+  if (res.h_raw !== undefined && document.getElementById('ind_h')) document.getElementById('ind_h').style.background = (res.h_raw == 0) ? '#ef4444' : '#22c55e';
+  if (res.g_raw !== undefined && document.getElementById('ind_g')) document.getElementById('ind_g').style.background = (res.g_raw == 0) ? '#ef4444' : '#22c55e';
+  } catch(err) {
+    console.error("paintStatus execution error:", err);
+  }
 }
 
-function updateAlarmUI(aSt, aT) {
+function updateAlarmUI(aSt, aT, isMuted) {
+  var dict = I18N[currentLang] || I18N.tr;
   var title = document.getElementById('alarmStatusText');
   var sub = document.getElementById('alarmSubText');
   var btnK = document.getElementById('btnAlarmKur');
   var btnX = document.getElementById('btnAlarmKapat');
+  var timeBadge = document.getElementById('alarmTimeBadge');
+  var modalTime = document.getElementById('pass-modal-time');
   if (!title) return;
 
+  if (aSt == 3 || aSt == 4) {
+    if (!gAlarmTriggerTime) {
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2, '0');
+      var mm = String(now.getMinutes()).padStart(2, '0');
+      gAlarmTriggerTime = hh + ':' + mm;
+      try { localStorage.setItem('karavan_alarm_trigger_time', gAlarmTriggerTime); } catch(e){}
+    }
+  } else if (aSt == 0) {
+    gAlarmTriggerTime = '';
+    try { localStorage.removeItem('karavan_alarm_trigger_time'); } catch(e){}
+  }
+
+  var timeStr = gAlarmTriggerTime ? ((dict.alarm_detected_at || "Algılanma Saati:") + " " + gAlarmTriggerTime) : "";
+  if (timeBadge) {
+    if (timeStr && (aSt == 3 || aSt == 4)) {
+      timeBadge.innerText = timeStr;
+      timeBadge.style.display = 'block';
+    } else {
+      timeBadge.style.display = 'none';
+    }
+  }
+  if (modalTime) {
+    if (timeStr && (aSt == 3 || aSt == 4)) {
+      modalTime.innerText = timeStr;
+      modalTime.style.display = 'block';
+    } else {
+      modalTime.style.display = 'none';
+    }
+  }
+
   if (aSt == 0) {
-    title.innerText = "Alarm Kapalı"; title.style.color = "var(--text-primary)";
-    sub.innerText = "Sistem devrede değil"; btnK.style.display = 'block'; btnX.style.display = 'none';
+    title.innerText = dict.alarm_state_off_title || "Alarm Kapalı"; title.style.color = "var(--text-primary)";
+    sub.innerText = dict.alarm_state_off_sub || "Sistem devrede değil"; if (btnK) btnK.style.display = 'block'; if (btnX) btnX.style.display = 'none';
   } else if (aSt == 1) {
-    title.innerText = "Çıkış Bekleniyor"; title.style.color = '#f59e0b';
-    sub.innerText = aT + ' sn içinde çıkın'; btnK.style.display = 'none'; btnX.style.display = 'block';
+    title.innerText = dict.alarm_state_exit_title || "Çıkış Bekleniyor"; title.style.color = '#f59e0b';
+    var exitText = (dict.alarm_state_exit_sub || '{t} sn içinde çıkın').replace('{t}', aT);
+    sub.innerText = exitText; if (btnK) btnK.style.display = 'none'; if (btnX) btnX.style.display = 'block';
   } else if (aSt == 2) {
-    title.innerText = "Alarm Kurulu"; title.style.color = '#22c55e';
-    sub.innerText = "Güvendesiniz"; btnK.style.display = 'none'; btnX.style.display = 'block';
+    title.innerText = dict.alarm_state_armed_title || "Alarm Kurulu"; title.style.color = '#22c55e';
+    sub.innerText = dict.alarm_state_armed_sub || "Güvendesiniz"; if (btnK) btnK.style.display = 'none'; if (btnX) btnX.style.display = 'block';
   } else if (aSt == 3) {
-    title.innerText = "Giriş Algılandı!"; title.style.color = '#ef4444';
-    sub.innerText = aT + ' sn içinde şifre girin!'; btnK.style.display = 'none'; btnX.style.display = 'block';
+    title.innerText = dict.alarm_state_entry_title || "Giriş Algılandı!"; title.style.color = '#ef4444';
+    var entryText = (dict.alarm_state_entry_sub || '{t} sn içinde şifre girin!').replace('{t}', aT);
+    sub.innerText = entryText; if (btnK) btnK.style.display = 'none'; if (btnX) btnX.style.display = 'block';
   } else if (aSt == 4) {
-    title.innerText = "ALARM ÇALIYOR!"; title.style.color = '#ef4444';
-    sub.innerText = "Siren devrede!"; btnK.style.display = 'none'; btnX.style.display = 'block';
+    if (isMuted) {
+      title.innerText = dict.alarm_state_muted_title || "Giriş Algılandı (Siren Susturuldu)"; title.style.color = '#ef4444';
+      sub.innerText = dict.alarm_state_muted_sub || "5 dk süre doldu, siren sustu. Şifre girin!";
+    } else {
+      title.innerText = dict.alarm_state_trigger_title || "ALARM ÇALIYOR!"; title.style.color = '#ef4444';
+      sub.innerText = dict.alarm_state_trigger_sub || "Siren devrede!";
+    }
+    if (btnK) btnK.style.display = 'none'; if (btnX) btnX.style.display = 'block';
   }
 
   if (aSt == 3 || aSt == 4) {
@@ -2353,17 +2931,17 @@ function toggleRelay(id) {
   } else if (id === 'r0') {
     // Fiziki Röle 1: Su Pompası (Hidrofor)
     var pumpBtn = document.getElementById('btn_pump');
-    var isPumpOn = pumpBtn ? (pumpBtn.classList.contains('active-magenta') || pumpBtn.classList.contains('active-blue')) : false;
+    var isPumpOn = pumpBtn ? (pumpBtn.classList.contains('active-orange') || pumpBtn.classList.contains('active-magenta') || pumpBtn.classList.contains('active-blue')) : false;
     wantOn = !isPumpOn;
     if (wantOn && isDryRunProtectionOn && currentTemizSuYuzde === 0) {
-      showA("Susuz Çalıştırma Koruması", "Temiz su deposu boş olduğu için su pompası çalıştırılamaz!", false);
+      showA(dict.msg_pump_prot || "Susuz Çalıştırma Koruması", dict.msg_pump_empty || "Temiz su deposu boş olduğu için su pompası çalıştırılamaz!", false);
       relayBusy[id] = false;
       return;
     }
   } else if (id === 'r1') {
     // Fiziki Röle 2: İnvertör (220V)
     var invBtn = document.getElementById('btn_inverter');
-    var isInvOn = invBtn ? invBtn.classList.contains('active-magenta') : false;
+    var isInvOn = invBtn ? (invBtn.classList.contains('active-orange') || invBtn.classList.contains('active-magenta')) : false;
     wantOn = !isInvOn;
   } else {
     var card = document.getElementById('card_' + id);
@@ -2500,10 +3078,18 @@ function renderDevices(cfg) {
       var safeAttrNm = nm.replace(/"/g, '&quot;');
       rHtml += '<div class="womo-relay-tile" id="card_r' + i + '" data-id="r' + i + '" data-nm="' + safeAttrNm + '">' +
         '<div class="relay-top-row">' +
-          '<div class="relay-title" id="title_r' + i + '">' + nm + '</div>' +
-          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 12h12"/></svg>' +
+          '<div class="relay-icon-badge">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/><path d="M9 21h6"/></svg>' +
+          '</div>' +
+          '<div class="relay-pill-switch">' +
+            '<span class="switch-txt" id="sw_r' + i + '">' + dict.off + '</span>' +
+            '<span class="switch-dot"></span>' +
+          '</div>' +
         '</div>' +
-        '<div class="relay-status" id="st_r' + i + '">' + dict.off + '</div>' +
+        '<div>' +
+          '<div class="relay-title" id="title_r' + i + '">' + nm + '</div>' +
+          '<div class="relay-status" id="st_r' + i + '">' + dict.off + '</div>' +
+        '</div>' +
       '</div>';
     }
   }
@@ -2526,7 +3112,7 @@ function renderDevices(cfg) {
         '<div class="dimmer-row">' +
           '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8F97B0" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/></svg>' +
           '<input type="range" min="0" max="100" value="0" id="range_p' + i + '" oninput="handlePwmSlider(' + i + ', this.value)" class="womo-slider">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C026D3" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
         '</div>' +
       '</div>';
     }
@@ -2627,6 +3213,8 @@ function applyConfigToUI(cfg) {
   }
   if (cfg.pt !== undefined && document.getElementById('cfg_p_tip')) document.getElementById('cfg_p_tip').value = cfg.pt;
   if (cfg.atip !== undefined && document.getElementById('cfg_aku_tipi')) document.getElementById('cfg_aku_tipi').value = cfg.atip;
+  var tipToApply = cfg.atip || (document.getElementById('cfg_aku_tipi') ? document.getElementById('cfg_aku_tipi').value : null) || localStorage.getItem('karavan_aku_tipi') || 'lifepo4';
+  updateBatteryDialType(tipToApply);
   if (cfg.akap !== undefined && document.getElementById('cfg_aku_kapasite')) document.getElementById('cfg_aku_kapasite').value = cfg.akap;
   if (cfg.alPass !== undefined && document.getElementById('cfg_al_pass')) document.getElementById('cfg_al_pass').value = cfg.alPass;
   if (cfg.alCikis !== undefined && document.getElementById('cfg_al_cikis')) document.getElementById('cfg_al_cikis').value = cfg.alCikis;
@@ -2638,8 +3226,11 @@ function applyConfigToUI(cfg) {
 // ==========================================
 function kaydetAyarlar() {
   var dict = I18N[currentLang] || I18N.tr;
+  var atipVal = document.getElementById('cfg_aku_tipi').value;
+  updateBatteryDialType(atipVal);
+  localStorage.setItem('karavan_aku_tipi', atipVal);
   var cfgObj = {
-    atip: document.getElementById('cfg_aku_tipi').value,
+    atip: atipVal,
     akap: parseFloat(document.getElementById('cfg_aku_kapasite').value) || 100,
     st: document.getElementById('cfg_s_temiz').checked,
     sg: document.getElementById('cfg_s_gri').checked,
@@ -2710,6 +3301,70 @@ function kaydetAyarlar() {
 }
 
 // ==========================================
+// CANLI SAAT VE HAVA DURUMU SİSTEMİ
+// ==========================================
+function updateLiveClock() {
+  var now = new Date();
+  var clockEl = document.getElementById('heroClock');
+  var secEl = document.getElementById('heroClockSec');
+  var dateEl = document.getElementById('heroDate');
+  var weatherIconEl = document.getElementById('heroWeatherIcon');
+  var weatherTextEl = document.getElementById('heroWeatherText');
+  var weatherSubEl = document.getElementById('heroWeatherSub');
+
+  if (clockEl) {
+    var hh = String(now.getHours()).padStart(2, '0');
+    var mm = String(now.getMinutes()).padStart(2, '0');
+    clockEl.textContent = hh + ':' + mm;
+  }
+  if (secEl) {
+    var ss = String(now.getSeconds()).padStart(2, '0');
+    secEl.textContent = ':' + ss;
+  }
+
+  if (dateEl) {
+    var langMap = { tr: 'tr-TR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT' };
+    var locale = langMap[currentLang] || 'tr-TR';
+    var options = { weekday: 'long', day: 'numeric', month: 'long' };
+    try {
+      dateEl.textContent = now.toLocaleDateString(locale, options);
+    } catch(e) {
+      dateEl.textContent = now.toLocaleDateString();
+    }
+  }
+
+  if (weatherTextEl) {
+    var h = now.getHours();
+    var isNight = (h < 6 || h >= 20);
+    var dict = I18N[currentLang] || I18N.tr;
+    var extEl = document.getElementById('tempExternal');
+    var extT = extEl ? parseFloat(extEl.innerText) : NaN;
+    var extStr = (!isNaN(extT)) ? extT.toFixed(1) + '°C' : '';
+
+    var cond = "";
+    var iconSvg = "";
+
+    if (isNight) {
+      cond = dict.weather_clear_night || "Açık Gece";
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    } else if (!isNaN(extT) && extT >= 24) {
+      cond = dict.weather_sunny || "Güneşli";
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    } else if (!isNaN(extT) && extT <= 10) {
+      cond = dict.weather_cool || "Bulutlu / Serin";
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>';
+    } else {
+      cond = dict.weather_partly_cloudy || "Parçalı Bulutlu";
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></svg>';
+    }
+
+    weatherTextEl.innerText = cond;
+    if (weatherIconEl) weatherIconEl.innerHTML = iconSvg;
+    if (weatherSubEl) weatherSubEl.innerText = extStr ? (extStr + " • " + (dict.out_temp || "DIŞ")) : (dict.out_temp || "Dış Ortam");
+  }
+}
+
+// ==========================================
 // SAYFA İLK YÜKLEME
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
@@ -2747,6 +3402,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   switchWomoTab('tab-energy');
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
   autoConnectIfPaired();
 });
 
@@ -2761,6 +3418,10 @@ window.addEventListener('pointerdown', function() {
     autoConnectIfPaired();
   }
 }, { passive: true });
+window.test220V = function(on) {
+  var el = document.getElementById('badge_220v');
+  if (el) el.style.display = (on !== false) ? 'inline-flex' : 'none';
+};
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('sw.js').then(function(reg) {
